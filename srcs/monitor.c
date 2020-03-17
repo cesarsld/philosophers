@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/17 17:43:33 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/17 20:30:24 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ void	pad_number(int num, int check)
 
 void	write_msg(int time, int id, const char *action)
 {
-	//pad_number(time, 999999999);
+	pad_number(time, 9999999);
 	ft_putnbr(time);
 	write(1, " ", 1);
-	//pad_number(id, 999);
+	pad_number(id, 999);
 	ft_putnbr(id);
 	write(1, action, ft_strlen(action));
 }
@@ -126,6 +126,7 @@ void	*monitor_philos(void *phil)
 				unlock_forks(&(philos[counter]));
 				write_msg(philos[counter].alerts[e_dead], philos[counter].number, " is dead\n");
 				philos->setup->can_stop = 1;
+				pthread_mutex_unlock(&(philos->setup->is_dead));
 				return (NULL);
 			}
 			check_msgs(&(philos[counter]));

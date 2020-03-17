@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/17 17:26:10 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/17 19:42:29 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct		s_setup
 {
 	pthread_t		*philos;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	is_dead;
 	struct timeval	start;
 	int				philo_num;
 	int				time_to_die;
