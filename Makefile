@@ -6,7 +6,7 @@
 #    By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 18:36:00 by cjaimes           #+#    #+#              #
-#    Updated: 2020/03/16 16:23:57 by cjaimes          ###   ########.fr        #
+#    Updated: 2020/03/17 17:36:22 by cjaimes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRC_DIR		=	srcs/
 INCLUDE		=	includes
 
 SRC			=	main.c \
+				monitor.c
 				
 
 SRCS		=	${addprefix ${SRC_DIR}, ${SRC}}
@@ -49,16 +50,14 @@ ${NAME}: ${OBJS}
 	${CC} ${CFLAGS} -o ${NAME} ${OBJS}
 
 run : all
-	./${NAME} 10 260 100 150
+	./${NAME} 4 410 200 200
 
 bonus: all
 
 clean:
 	${RM} ${OBJS}
-	${MAKE} -C ${LIB_DIR} clean
 
 fclean:	clean
 	${RM} ${NAME}
-	${RM} ${LIB_DIR}/${LIB_NAME}
 
 re: fclean all

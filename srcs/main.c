@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/16 17:12:58 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/17 17:45:25 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ int	ft_atoi(const char *input)
 	return (res);
 }
 
+void	set_msg(t_philo *phil, int msg, int time)
+{
+	phil->alerts[msg] = time;
+}
+
 int	elapsed_time(struct timeval start)
 {
 	struct timeval now;
@@ -50,114 +55,111 @@ int	elapsed_time(struct timeval start)
 	return (now.tv_sec - start.tv_sec) * 1000 + (now.tv_usec - start.tv_usec) / 1000;
 }
 
-int	lock_forks(pthread_mutex_t *forks, t_philo *phil, int first, int second)
+int	unlock_forks(t_philo *philo)
 {
-	pthread_mutex_lock(&(forks[first]));
+	if (philo->hands & 0b1)
+		pthread_mutex_unlock(philo->left);
+	if (philo->hands & 0b10)
+		pthread_mutex_unlock(philo->right);
+	philo->hands = 0;
+	return (SUCCESS);
+}
+
+int	check_dead(t_philo *phil, t_setup *setup)
+{
+	if (setup->can_stop)
+		return (FAILURE);
+	if (elapsed_time(setup->start) - phil->last_dinner_ts > setup->time_to_die)
+	{
+		set_msg(phil, e_dead, elapsed_time(phil->setup->start));
+		unlock_forks(phil);
+		phil->state = e_dead;
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
+int	lock_forks(t_philo *phil)
+{
+	pthread_mutex_lock(phil->left);
 	phil->hands |= 0b1;
-	printf("%6d %5d has taken a fork\n", elapsed_time(phil->setup->start), phil->number);
-	pthread_mutex_lock(&(forks[second]));
+	set_msg(phil, e_fork_left, elapsed_time(phil->setup->start));
+	pthread_mutex_lock(phil->right);
 	phil->hands |= 0b10;
-	printf("%6d %5d has taken second fork\n", elapsed_time(phil->setup->start), phil->number);
+	set_msg(phil, e_fork_right, elapsed_time(phil->setup->start));
 	return (SUCCESS);
-}
-
-int	unlock_forks(pthread_mutex_t *forks, int first, int second)
-{
-	pthread_mutex_unlock(&(forks[first]));
-	pthread_mutex_unlock(&(forks[second]));
-	return (SUCCESS);
-}
-
-int	kill_phil()
-{
-	printf("%6d %5d has died\n", elapsed_time(setup.start), phil->number);
-	if (phil->number == phil->setup->philo_num)
-		unlock_forks(setup.forks, 0, phil->id);
-	else
-		unlock_forks(setup.forks, phil->id, phil->id + 1);
-	phil->state = e_dead;
-	phil->setup->can_stop = 1;
 }
 
 void *handle_philosopher(void *hi)
 {
 	t_philo *phil;
 	t_setup	setup;
-	struct timeval now;
-	int		elapsed;
 
 	phil = hi;
 	setup = *(phil->setup);
 	while (!phil->setup->can_stop)
 	{
-		gettimeofday(&now, 0);
-		elapsed = elapsed_time(setup.start);
 		if (phil->state == e_thinking)
 		{
-			if (phil->number == phil->setup->philo_num)
-			{
-				lock_forks(setup.forks, phil, 0, phil->id);
-				// pthread_mutex_lock(&(phil->setup->forks[0]));
-				// phil->hands |= 0b1;
-				// printf("%6d %5d has taken a fork\n", elapsed_time(setup.start), phil->number);
-				// pthread_mutex_lock(&(phil->setup->forks[phil->id]));
-				// phil->hands |= 0b10;
-				// printf("%6d %5d has taken second fork\n", elapsed_time(setup.start), phil->number);
-			}
-			else
-			{
-				lock_forks(setup.forks, phil, phil->id, phil->id + 1);
-			}
-			if (elapsed_time(setup.start) - phil->last_dinner_ts > setup.time_to_die)
-			{
-				printf("%6d %5d has died\n", elapsed_time(setup.start), phil->number);
-				if (phil->number == phil->setup->philo_num)
-					unlock_forks(setup.forks, 0, phil->id);
-				else
-					unlock_forks(setup.forks, phil->id, phil->id + 1);
-				phil->state = e_dead;
-				phil->setup->can_stop = 1;
-				break;
-			}
-			else
-			{
-				phil->last_dinner_ts = elapsed_time(setup.start);
-				phil->state = e_eating;
-			}
+			if (lock_forks(phil) == FAILURE)
+				break ;
+			phil->last_dinner_ts = elapsed_time(setup.start);
+			phil->state = e_eating;
 		}
 		else if (phil->state == e_eating)
 		{
-			printf("%6d %5d is eating\n", elapsed_time(setup.start), phil->number);
+			set_msg(phil, e_eating, /*elapsed_time(phil->setup->start)*/phil->last_dinner_ts );
 			usleep(setup.time_to_eat * 1000);
 			phil->dinners++;
-			if (phil->number == phil->setup->philo_num)
-			{
-				pthread_mutex_unlock(&(phil->setup->forks[0]));
-				pthread_mutex_unlock(&(phil->setup->forks[phil->id]));
-			}
-			else
-			{
-				pthread_mutex_unlock(&(phil->setup->forks[phil->id]));
-				pthread_mutex_unlock(&(phil->setup->forks[phil->id + 1]));
-			}
+			unlock_forks(phil);
 			phil->state = e_sleeping;
 		}
 		else if (phil->state == e_sleeping)
 		{
-			printf("%6d %5d is sleeping\n", elapsed_time(setup.start), phil->number);
+			set_msg(phil, e_sleeping, elapsed_time(phil->setup->start));
 			usleep(setup.time_to_sleep * 1000);
 			phil->state = e_thinking;
-			printf("%6d %5d is thinking\n", elapsed_time(setup.start), phil->number);
+			set_msg(phil, e_thinking, elapsed_time(phil->setup->start));
 		}
 	}
 	return (NULL);
 }
 
+void	init_philos(t_philo *philos, t_setup *setup)
+{
+	int counter;
+	int s;
+
+	counter = 0;
+	while (counter < setup->philo_num)
+	{
+		philos[counter].number = counter + 1;
+		philos[counter].id = counter;
+		philos[counter].dinners = 0;
+		philos[counter].last_dinner_ts = 0;
+		philos[counter].hands = 0;
+		philos[counter].setup = setup;
+		philos[counter].state = e_thinking;
+		s = 0;
+		while (s < 6)
+			philos[counter].alerts[s++] = -1;
+		philos[counter].left = &(setup->forks[counter]);
+		if (philos[counter].number == setup->philo_num)
+			philos[counter].right = &(setup->forks[0]);
+		else
+			philos[counter].right = &(setup->forks[counter + 1]);
+		counter++;
+	}
+}
+
 int main(int ac, char **av)
 {
-	t_setup	setup;
-	int		counter;
-	t_philo	*philos;
+	t_setup		setup;
+	int			counter;
+	t_philo		*philos;
+	int			mult;
+	pthread_t	monitor;
+
 	counter = 0;
 	setup.can_stop = 0;
 	setup.philo_num = ft_atoi(av[1]);
@@ -167,30 +169,33 @@ int main(int ac, char **av)
 	setup.eat_cycles = ac == 6 ?  ft_atoi(av[5]) : 1;
 	setup.philos = malloc(sizeof(pthread_t) * (setup.philo_num));
 	philos = malloc(sizeof(t_philo) * setup.philo_num);
-	setup.id = malloc(sizeof(int) * (setup.philo_num));
 	setup.forks = malloc(sizeof(pthread_mutex_t)* (setup.philo_num));
 	while (counter < setup.philo_num)
 		pthread_mutex_init(&(setup.forks[counter++]), NULL);
-	counter = 0;
+	init_philos(philos, &setup);
 	gettimeofday(&setup.start, NULL);
-	while (counter < setup.philo_num)
+	pthread_create(&monitor, NULL, &monitor_philos, philos);
+	mult = setup.philo_num / 2;
+	//write(1, "c", 1);
+	counter = 0;
+	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
-		philos[counter].number = counter + 1;
-		philos[counter].id = counter;
-		philos[counter].dinners = 0;
-		philos[counter].last_dinner_ts = 0;
-		philos[counter].hands = 0;
-		setup.id[counter] = counter + 1;
-		philos[counter].setup = &setup;
-		philos[counter].state = e_thinking;
-		pthread_create(&setup.philos[counter], NULL, &handle_philosopher, &(philos[counter]));
+		//write(1, "a", 1);
+		pthread_create(&setup.philos[counter * 2], NULL, &handle_philosopher, &(philos[counter * 2]));
 		counter++;
+		usleep(20);
 	}
 	counter = 0;
-	while (counter < setup.philo_num)
+	while (counter < mult)
+	{
+		pthread_create(&setup.philos[counter * 2 + 1], NULL, &handle_philosopher, &(philos[counter * 2 + 1]));	
+		counter++;
+		usleep(20);
+	}
+	counter = 0;
+	while (counter < setup.philo_num && !setup.can_stop)
 	{
 		pthread_join(setup.philos[counter], 0);
-		printf("waiting..\n");
 		counter++;
 	}
 }
