@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/17 19:42:29 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/18 11:11:05 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct		s_setup
 	pthread_t		*philos;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	is_dead;
+	pthread_mutex_t	writing;
 	struct timeval	start;
 	int				philo_num;
 	int				time_to_die;
@@ -73,6 +74,6 @@ void	ft_putnbr(int n);
 void	*monitor_philos(void *stp);
 int	elapsed_time(struct timeval start);
 void	set_msg(t_philo *phil, int msg, int time);
-int	unlock_forks(t_philo *philo);
+void	unlock_forks(t_philo *philo);
 
 #endif
