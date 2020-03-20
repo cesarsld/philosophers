@@ -6,7 +6,7 @@
 #    By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 18:36:00 by cjaimes           #+#    #+#              #
-#    Updated: 2020/03/18 11:03:45 by cjaimes          ###   ########.fr        #
+#    Updated: 2020/03/20 10:37:51 by cjaimes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRC_DIR		=	srcs/
 INCLUDE		=	includes
 
 SRC			=	main.c \
-				monitor.c
+				monitor.c \
+				utils.c
 				
 
 SRCS		=	${addprefix ${SRC_DIR}, ${SRC}}

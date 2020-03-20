@@ -6,53 +6,23 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/18 11:49:07 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/20 10:38:32 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-void	ft_putnbr(int n)
-{
-	char c;
-
-	if (n == -2147483648)
-		write(1, "-2147483648", 11);
-	else
-	{
-		if (n < 0)
-		{
-			write(1, "-", 1);
-			n = -n;
-		}
-		if (n / 10 > 0)
-			ft_putnbr(n / 10);
-		c = n % 10 + '0';
-		write(1, &c, 1);
-	}
-}
-
-int	ft_atoi(const char *input)
-{
-	int res;
-
-	res = 0;
-	while (*input)
-		res = res * 10  + *input++ - '0';
-	return (res);
-}
 
 void	set_msg(t_philo *phil, int msg, int time)
 {
 	phil->alerts[msg] = time;
 }
 
-int	elapsed_time(struct timeval start)
+uint64_t	elapsed_time(struct timeval start)
 {
 	struct timeval now;
 
 	gettimeofday(&now, 0);
-	return (now.tv_sec - start.tv_sec) * 1000 + (now.tv_usec - start.tv_usec) / 1000;
+	return (now.tv_sec - start.tv_sec) * 1000000 + (now.tv_usec - start.tv_usec);
 }
 
 void	unlock_forks(t_philo *philo)
@@ -61,13 +31,12 @@ void	unlock_forks(t_philo *philo)
 	pthread_mutex_unlock(philo->right);
 }
 
-int	lock_forks(t_philo *phil)
+void	lock_forks(t_philo *phil)
 {
 	pthread_mutex_lock(phil->left);
 	phil->alerts[e_fork_left] = 1;
 	pthread_mutex_lock(phil->right);
 	phil->alerts[e_fork_right] = 1;
-	return (SUCCESS);
 }
 
 void *handle_philosopher(void *hi)
@@ -105,7 +74,6 @@ void	init_philos(t_philo *philos, t_setup *setup)
 		philos[counter].id = counter;
 		philos[counter].dinners = 0;
 		philos[counter].last_dinner_ts = 0;
-		philos[counter].hands = 0;
 		philos[counter].setup = setup;
 		philos[counter].state = e_thinking;
 		s = 0;
@@ -126,7 +94,6 @@ int main(int ac, char **av)
 	int			counter;
 	t_philo		*philos;
 	int			mult;
-	//pthread_t	monitor;
 
 	counter = 0;
 	setup.can_stop = 0;
@@ -137,7 +104,7 @@ int main(int ac, char **av)
 	setup.eat_cycles = ac == 6 ?  ft_atoi(av[5]) : 1;
 	setup.philos = malloc(sizeof(pthread_t) * (setup.philo_num));
 	philos = malloc(sizeof(t_philo) * setup.philo_num);
-	//remove one fork since tthis is testting witht one philosopher
+	//remove one fork since this is testting witht one philosopher
 	setup.forks = malloc(sizeof(pthread_mutex_t)* (setup.philo_num + 1));
 	pthread_mutex_init(&(setup.is_dead), NULL);
 	pthread_mutex_init(&(setup.writing), NULL);
@@ -146,7 +113,6 @@ int main(int ac, char **av)
 		pthread_mutex_init(&(setup.forks[counter++]), NULL);
 	init_philos(philos, &setup);
 	gettimeofday(&setup.start, NULL);
-	//pthread_create(&monitor, NULL, &monitor_philos, philos);
 	mult = setup.philo_num / 2;
 	counter = 0;
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))

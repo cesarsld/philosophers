@@ -6,55 +6,17 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/18 11:59:02 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/20 10:37:03 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int		ft_strlen(const char *str)
-{
-	size_t			res;
-
-	res = 0;
-	while (*str)
-	{
-		if (!(*(str + 1)))
-			return (res + 1);
-		if (!(*(str + 2)))
-			return (res + 2);
-		if (!(*(str + 3)))
-			return (res + 3);
-		if (!(*(str + 4)))
-			return (res + 4);
-		if (!(*(str + 5)))
-			return (res + 5);
-		if (!(*(str + 6)))
-			return (res + 6);
-		if (!(*(str + 7)))
-			return (res + 7);
-		res += 8;
-		str += 8;
-	}
-	return (res);
-}
-
-void	pad_number(int num, int check)
-{
-	if (num < check)
-	{
-		write(1, " ", 1);
-		return (pad_number(num, check / 10));
-	}
-}
-
 void	write_msg(int time, int id, const char *action, pthread_mutex_t *writing)
 {
 	pthread_mutex_lock(writing);
-	pad_number(time, 9999999);
 	ft_putnbr(time);
-	write(1, " ", 1);
-	pad_number(id, 999);
+	write(1, "\t", 1);
 	ft_putnbr(id);
 	write(1, action, ft_strlen(action));
 	pthread_mutex_unlock(writing);
@@ -98,52 +60,23 @@ void	check_msgs(t_philo *phil, int time)
 
 void	*monitor_philos(void *phil)
 {
-	t_philo *philos;
-	int		time;
+	t_philo *philo;
+	uint64_t		time;
 	
-	philos = phil;
+	philo = phil;
 	while (1)
 	{
-		time = elapsed_time(philos->setup->start);
-		if (time - philos->last_dinner_ts
-			> philos->setup->time_to_die)
+		time = elapsed_time(philo->setup->start);
+		if (time - philo->last_dinner_ts
+			> philo->setup->time_to_die)
 		{
-			set_msg(philos, e_dead, 1);
-			write_msg(time, philos->number, " is dead\n", &philos->setup->writing);
-			pthread_mutex_unlock(&(philos->setup->is_dead));
+			set_msg(philo, e_dead, 1);
+			write_msg(time / 1000, philo->number, " is dead\n", &philo->setup->writing);
+			pthread_mutex_unlock(&(philo->setup->is_dead));
 			return (NULL);
 		}
-		check_msgs(philos, time);
-		usleep(500);
+		check_msgs(philo, time / 1000);
+		usleep(1000);
 	}
 	return (NULL);
 }
-
-// void	*monitor_philos(void *phil)
-// {
-// 	int		counter;
-// 	t_philo *philos;
-	
-// 	philos = phil;
-// 	while (1)
-// 	{
-// 		counter = 0;
-// 		while (counter < philos->setup->philo_num)
-// 		{
-// 			if (elapsed_time(philos->setup->start) - philos[counter].last_dinner_ts
-// 				> philos->setup->time_to_die)
-// 			{
-// 				set_msg(&(philos[counter]), e_dead, elapsed_time(philos[counter].setup->start));
-// 				unlock_forks(&(philos[counter]));
-// 				write_msg(philos[counter].alerts[e_dead], philos[counter].number, " is dead\n");
-// 				//philos->setup->can_stop = 1;
-// 				pthread_mutex_unlock(&(philos->setup->is_dead));
-// 				return (NULL);
-// 			}
-// 			check_msgs(&(philos[counter]));
-// 			counter++;
-// 		}
-// 		usleep(1000);
-// 	}
-// 	return (NULL);
-// }

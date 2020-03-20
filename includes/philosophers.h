@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/18 11:11:05 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/20 10:14:56 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct		s_setup
 	pthread_mutex_t	writing;
 	struct timeval	start;
 	int				philo_num;
-	int				time_to_die;
+	uint64_t				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				eat_cycles;
@@ -64,15 +64,14 @@ typedef struct		s_philosophers
 	int				alerts[6];
 	t_philo_states	state;
 	t_setup			*setup;
-	uint8_t			hands : 2;
-	int				last_dinner_ts;
+	uint64_t		last_dinner_ts;
 	int				dinners;
 }					t_philo;
 
 
 void	ft_putnbr(int n);
 void	*monitor_philos(void *stp);
-int	elapsed_time(struct timeval start);
+uint64_t	elapsed_time(struct timeval start);
 void	set_msg(t_philo *phil, int msg, int time);
 void	unlock_forks(t_philo *philo);
 
