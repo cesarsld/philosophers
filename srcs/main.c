@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/20 10:38:32 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/20 10:58:48 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,21 @@ void	lock_forks(t_philo *phil)
 {
 	pthread_mutex_lock(phil->left);
 	phil->alerts[e_fork_left] = 1;
+	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	pthread_mutex_lock(phil->right);
 	phil->alerts[e_fork_right] = 1;
+	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
+}
+
+void eat(t_philo *phil)
+{
+	phil->is_eating = 1;
+	phil->last_dinner_ts = elapsed_time(phil->setup->start);
+	phil->alerts[e_eating] = 1;
+	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
+	usleep(phil->setup->time_to_eat);
+	phil->dinners++;
+	phil->is_eating = 0;
 }
 
 void *handle_philosopher(void *hi)
@@ -50,14 +63,13 @@ void *handle_philosopher(void *hi)
 	while (1)
 	{
 		phil->alerts[e_thinking] = 1;
+		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 		lock_forks(phil);
-		phil->last_dinner_ts = elapsed_time(phil->setup->start);
-		phil->alerts[e_eating] = 1;
-		usleep(phil->setup->time_to_eat * 1000);
-		phil->dinners++;
+		eat(phil);
 		unlock_forks(phil);
 		phil->alerts[e_sleeping] = 1;
-		usleep(phil->setup->time_to_sleep * 1000);
+		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
+		usleep(phil->setup->time_to_sleep);
 	}
 	return (NULL);
 }
@@ -76,6 +88,7 @@ void	init_philos(t_philo *philos, t_setup *setup)
 		philos[counter].last_dinner_ts = 0;
 		philos[counter].setup = setup;
 		philos[counter].state = e_thinking;
+		philos[counter].is_eating = 0;
 		s = 0;
 		while (s < 6)
 			philos[counter].alerts[s++] = 0;
@@ -98,9 +111,9 @@ int main(int ac, char **av)
 	counter = 0;
 	setup.can_stop = 0;
 	setup.philo_num = ft_atoi(av[1]);
-	setup.time_to_die = ft_atoi(av[2]);
-	setup.time_to_eat = ft_atoi(av[3]);
-	setup.time_to_sleep = ft_atoi(av[4]);
+	setup.time_to_die = ft_atoi(av[2]) * 1000;
+	setup.time_to_eat = ft_atoi(av[3]) * 1000;
+	setup.time_to_sleep = ft_atoi(av[4]) * 1000;
 	setup.eat_cycles = ac == 6 ?  ft_atoi(av[5]) : 1;
 	setup.philos = malloc(sizeof(pthread_t) * (setup.philo_num));
 	philos = malloc(sizeof(t_philo) * setup.philo_num);

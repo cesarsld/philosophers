@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/20 10:37:03 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/20 11:06:05 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,14 @@ void	*monitor_philos(void *phil)
 	while (1)
 	{
 		time = elapsed_time(philo->setup->start);
-		if (time - philo->last_dinner_ts
-			> philo->setup->time_to_die)
+		if (!philo->is_eating
+			&& time - philo->last_dinner_ts > philo->setup->time_to_die)
 		{
 			set_msg(philo, e_dead, 1);
 			write_msg(time / 1000, philo->number, " is dead\n", &philo->setup->writing);
 			pthread_mutex_unlock(&(philo->setup->is_dead));
 			return (NULL);
 		}
-		check_msgs(philo, time / 1000);
 		usleep(1000);
 	}
 	return (NULL);

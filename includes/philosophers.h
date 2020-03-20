@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/20 10:14:56 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/20 10:56:32 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ typedef struct		s_setup
 	struct timeval	start;
 	int				philo_num;
 	uint64_t				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
+	uint64_t				time_to_eat;
+	uint64_t				time_to_sleep;
 	int				eat_cycles;
 	int				can_stop;
 }					t_setup;
@@ -66,10 +66,16 @@ typedef struct		s_philosophers
 	t_setup			*setup;
 	uint64_t		last_dinner_ts;
 	int				dinners;
+	int				is_eating;
 }					t_philo;
 
 
 void	ft_putnbr(int n);
+int	ft_atoi(const char *input);
+int		ft_strlen(const char *str);
+
+void	check_msgs(t_philo *phil, int time);
+
 void	*monitor_philos(void *stp);
 uint64_t	elapsed_time(struct timeval start);
 void	set_msg(t_philo *phil, int msg, int time);
