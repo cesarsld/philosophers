@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 18:28:33 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 22:44:36 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,12 @@ void	set_msg(t_philo *phil, int msg)
 
 void	write_msg(int time, int id, const char *action, sem_t *writing)
 {
-	//pthread_mutex_lock(writing);
 	sem_wait(writing);
 	ft_putnbr(time);
 	write(1, "\t", 1);
 	ft_putnbr(id);
 	write(1, action, ft_strlen(action));
 	sem_post(writing);
-	//pthread_mutex_unlock(writing);
 }
 
 void	write_msg_unsafe(int time, int id, const char *action)
@@ -90,13 +88,13 @@ void	*monitor_philos(void *phil)
 			philo->setup->can_stop = 1;
 			philo->setup->somebody_died = 1;
 			set_msg(philo, e_dead);
-			//pthread_mutex_lock(&philo->setup->writing);
-			sem_wait(philo->setup->writing);
+			if (sem_wait(philo->setup->writing))
+				return ((void *)1);
 			write_msg_unsafe(time / 1000, philo->number, " is dead\n");
-			sem_post(philo->setup->writing);
-			//pthread_mutex_unlock(&philo->setup->writing);
-			//pthread_mutex_unlock(&(philo->setup->is_dead));
-			sem_post(philo->setup->is_dead);
+			if (sem_post(philo->setup->writing))
+				return ((void *)1);
+			if (sem_post(philo->setup->is_dead))
+				return ((void *)1);
 			return (NULL);
 		}
 		usleep(1000);

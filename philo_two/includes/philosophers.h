@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 22:18:43 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 22:39:35 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char				*ft_strcat(char *s1, const char *s2);
 void				check_msgs(t_philo *phil, int time);
 void				set_msg(t_philo *phil, int msg);
 void				*monitor_philos(void *stp);
-void				unlock_forks(t_philo *philo);
+int					unlock_forks(t_philo *philo);
 
 void				*handle_philosopher(void *hi);
 

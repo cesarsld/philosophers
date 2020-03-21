@@ -6,39 +6,42 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 22:17:04 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 22:41:46 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	unlock_forks(t_philo *philo)
+int	unlock_forks(t_philo *philo)
 {
 	if (philo->hands)
 	{
-		sem_post(philo->setup->forks);
+		if (sem_post(philo->setup->forks))
+			return (1);
 		philo->hands--;
 	}
 	if (philo->hands)
 	{
-		sem_post(philo->setup->forks);
+		if (sem_post(philo->setup->forks))
+			return (1);
 		philo->hands--;
 	}
+	return (0);
 }
 
-void	lock_forks(t_philo *phil)
+int	lock_forks(t_philo *phil)
 {
 	if (sem_wait(phil->setup->forks))
-	{
-		return ;
-	}
+		return (1);
 	phil->alerts[e_fork_left] = 1;
 	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
-	sem_wait(phil->setup->forks);
+	if (sem_wait(phil->setup->forks))
+		return (1);
 	phil->alerts[e_fork_right] = 1;
 	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
+	return (0);
 }
 
 void	eat(t_philo *phil)
@@ -69,22 +72,27 @@ void	*handle_philosopher(void *hi)
 	pthread_t monitor;
 
 	phil = hi;
-	pthread_create(&monitor, NULL, &monitor_philos, hi);
+	if (pthread_create(&monitor, NULL, &monitor_philos, hi))
+		return ((void *)1);
 	pthread_detach(monitor);
 	while (1 && !phil->setup->can_stop)
 	{
 		phil->alerts[e_thinking] = 1;
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
-		lock_forks(phil);
+		if (lock_forks(phil))
+			return ((void *)1);
 		eat(phil);
-		unlock_forks(phil);
+		if (unlock_forks(phil))
+			return ((void *)1);
 		if (check_cycle(phil))
 			return (NULL);
 		phil->alerts[e_sleeping] = 1;
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 		sleep_us(phil->setup->time_to_sleep);
 	}
-	unlock_forks(phil);
-	sem_post(phil->has_eaten_enough_times);
+	if (unlock_forks(phil))
+		return ((void *)1);
+	if (sem_post(phil->has_eaten_enough_times))
+		return ((void *)1);
 	return (NULL);
 }
