@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/20 19:41:22 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 11:09:50 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	init_philos(t_philo *philos, t_setup *setup)
 		s = 0;
 		while (s < 6)
 			philos[counter].alerts[s++] = 0;
-		philos[counter].left = &(setup->forks[counter]);
-		if (philos[counter].number == setup->philo_num)
-			philos[counter].right = &(setup->forks[0]);
-		else
-			philos[counter].right = &(setup->forks[counter + 1]);
+		// philos[counter].left = &(setup->forks[counter]);
+		// if (philos[counter].number == setup->philo_num)
+		// 	philos[counter].right = &(setup->forks[0]);
+		// else
+		// 	philos[counter].right = &(setup->forks[counter + 1]);
 		counter++;
 	}
 }
@@ -106,9 +106,10 @@ void	clean(t_setup *setup, t_philo *philos)
 
 	counter = 0;
 	free(philos);
-	while (counter < setup->philo_num)
-		pthread_mutex_destroy(&(setup->forks[counter++]));
-	free(setup->forks);
+	// while (counter < setup->philo_num)
+	// 	pthread_mutex_destroy(&(setup->forks[counter++]));
+	// free(setup->forks);
+	sem_close(setup->forks);
 }
 
 int		main(int ac, char **av)
@@ -120,9 +121,9 @@ int		main(int ac, char **av)
 	counter = 0;
 	init_setup(&setup, ac, av);
 	philos = malloc(sizeof(t_philo) * setup.philo_num);
-	setup.forks = malloc(sizeof(pthread_mutex_t)* (setup.philo_num));
-	while (counter < setup.philo_num)
-		pthread_mutex_init(&(setup.forks[counter++]), NULL);
+	setup.forks = sem_open("Forks", O_CREAT | O_EXCL, 0644, setup.philo_num);
+	// while (counter < setup.philo_num)
+	// 	pthread_mutex_init(&(setup.forks[counter++]), NULL);
 	init_philos(philos, &setup);
 	gettimeofday(&setup.start, NULL);
 	launch_philos(setup, philos);

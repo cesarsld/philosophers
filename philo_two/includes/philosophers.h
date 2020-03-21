@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/20 19:34:10 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 11:00:47 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <semaphore.h>
+# include <fcntl.h>
+# include <sys/stat.h>
 # define SUCCESS 0
 # define FAILURE 1
 
@@ -32,7 +35,7 @@ typedef enum		e_philo_states
 
 typedef struct		s_setup
 {
-	pthread_mutex_t	*forks;
+	sem_t			*forks;
 	pthread_mutex_t	is_dead;
 	pthread_mutex_t	writing;
 	struct timeval	start;
@@ -58,11 +61,9 @@ typedef struct		s_msg
 typedef struct		s_philosophers
 {
 	int				number;
-	pthread_mutex_t	*left;
-	pthread_mutex_t	*right;
 	pthread_mutex_t has_eaten_enough_times;
 	int				alerts[6];
-	uint8_t			hands : 2;
+	uint8_t			hands;
 	t_setup			*setup;
 	uint64_t		last_dinner_ts;
 	int				dinners;

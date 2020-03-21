@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/20 19:40:54 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 11:13:16 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,27 @@
 
 void	unlock_forks(t_philo *philo)
 {
-	if (philo->hands & 0b10)
-		pthread_mutex_unlock(philo->left);
-	if (philo->hands & 0b1)
-		pthread_mutex_unlock(philo->right);
-	philo->hands = 0;
+	if (philo->hands)
+	{
+		sem_post(philo->setup->forks);
+		philo->hands--;
+	}
+	if (philo->hands)
+	{
+		sem_post(philo->setup->forks);
+		philo->hands--;
+	}
 }
 
 void	lock_forks(t_philo *phil)
 {
-	pthread_mutex_lock(phil->left);
+	sem_wait(phil->setup->forks);
 	phil->alerts[e_fork_left] = 1;
-	phil->hands |= 0b10;
+	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
-	pthread_mutex_lock(phil->right);
+	sem_wait(phil->setup->forks);
 	phil->alerts[e_fork_right] = 1;
-	phil->hands |= 0b1;
+	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 }
 
