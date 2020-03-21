@@ -6,11 +6,38 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 10:37:07 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/20 10:37:30 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 22:05:13 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+char	*ft_strcpy(char *dst, const char *src)
+{
+	int i;
+
+	i = 0;
+	while (*src)
+	{
+		*dst++ = *src++;
+		i++;
+	}
+	*dst = '\0';
+	return (dst - i);
+}
+
+char	*ft_strcat(char *s1, const char *s2)
+{
+	char *tmp;
+
+	tmp = s1;
+	while (*s1)
+		s1++;
+	while (*s2)
+		*s1++ = *s2++;
+	*s1 = '\0';
+	return (tmp);
+}
 
 int		ft_strlen(const char *str)
 {

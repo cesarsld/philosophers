@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 11:13:16 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/21 22:17:04 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	unlock_forks(t_philo *philo)
 
 void	lock_forks(t_philo *phil)
 {
-	sem_wait(phil->setup->forks);
+	if (sem_wait(phil->setup->forks))
+	{
+		return ;
+	}
 	phil->alerts[e_fork_left] = 1;
 	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
@@ -53,7 +56,8 @@ int		check_cycle(t_philo *philo)
 {
 	if (philo->setup->eat_cycles && philo->dinners >= philo->setup->eat_cycles)
 	{
-		pthread_mutex_unlock(&(philo->has_eaten_enough_times));
+		if (sem_post(philo->has_eaten_enough_times))
+			return(1);
 		return (1);
 	}
 	return (0);
@@ -81,6 +85,6 @@ void	*handle_philosopher(void *hi)
 		sleep_us(phil->setup->time_to_sleep);
 	}
 	unlock_forks(phil);
-	pthread_mutex_unlock(&(phil->has_eaten_enough_times));
+	sem_post(phil->has_eaten_enough_times);
 	return (NULL);
 }
