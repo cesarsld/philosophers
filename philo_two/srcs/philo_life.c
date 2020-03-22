@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 22:41:46 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/22 09:12:21 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int	unlock_forks(t_philo *philo)
 	if (philo->hands)
 	{
 		if (sem_post(philo->setup->forks))
-			return (1);
+			return (philo->setup->can_stop = 1);
 		philo->hands--;
 	}
 	if (philo->hands)
 	{
 		if (sem_post(philo->setup->forks))
-			return (1);
+			return (philo->setup->can_stop = 1);
 		philo->hands--;
 	}
 	return (0);
@@ -32,12 +32,12 @@ int	unlock_forks(t_philo *philo)
 int	lock_forks(t_philo *phil)
 {
 	if (sem_wait(phil->setup->forks))
-		return (1);
+		return (phil->setup->can_stop = 1);
 	phil->alerts[e_fork_left] = 1;
 	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	if (sem_wait(phil->setup->forks))
-		return (1);
+		return (phil->setup->can_stop = 1);
 	phil->alerts[e_fork_right] = 1;
 	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
@@ -60,7 +60,7 @@ int		check_cycle(t_philo *philo)
 	if (philo->setup->eat_cycles && philo->dinners >= philo->setup->eat_cycles)
 	{
 		if (sem_post(philo->has_eaten_enough_times))
-			return(1);
+			return (philo->setup->can_stop = 1);
 		return (1);
 	}
 	return (0);
