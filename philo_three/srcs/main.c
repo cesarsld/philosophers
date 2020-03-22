@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/22 10:01:00 by cjaimes          ###   ########.fr       */
+/*   Updated: 2020/03/22 10:14:08 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ int		init_setup(t_setup *setup, int ac, char **av)
 	setup->eat_cycles = ac == 6 ?  ft_atoi(av[5]) : 0;
 	if (!(setup->philo_pid = malloc(sizeof(int) * setup->philo_num)))
 		return (1);
+	sem_unlink("Forks");
+	sem_unlink("is_dead");
+	sem_unlink("writing");
 	if ((setup->forks = sem_open("Forks", O_CREAT | O_EXCL, 0644, setup->philo_num)) == SEM_FAILED)
 		return (1);
 	if ((setup->is_dead  = sem_open("is_dead", O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
@@ -82,24 +85,8 @@ int		init_setup(t_setup *setup, int ac, char **av)
 	return (0);
 }
 
-int	launch_philos(t_setup setup, t_philo *philos)
-{
-	int counter;
-	pthread_t th;
-	
-	counter = 0;
-	while (counter < setup.philo_num)
-	{
-		if (pthread_create(&th, NULL, &handle_philosopher, &(philos[counter])))
-			return (1);
-		pthread_detach(th);
-		counter++;
-		usleep(10);
-	}
-	return (0);
-}
 
-int launch_philo1(t_setup *setup, t_philo *philo, int id)
+int launch_philo(t_setup *setup, t_philo *philo, int id)
 {
 	pid_t pid;
 
@@ -112,7 +99,7 @@ int launch_philo1(t_setup *setup, t_philo *philo, int id)
 	return (0);
 }
 
-int	launch_philos1(t_setup *setup, t_philo *philos)
+int	launch_philos(t_setup *setup, t_philo *philos)
 {
 	int counter;
 	pid_t pid;
@@ -121,7 +108,7 @@ int	launch_philos1(t_setup *setup, t_philo *philos)
 	pid = 0;
 	while (counter < setup->philo_num)
 	{
-		if (launch_philo1(setup, &(philos[counter]), counter))
+		if (launch_philo(setup, &(philos[counter]), counter))
 			return (1);
 		counter++;
 		usleep(10);
@@ -159,10 +146,12 @@ void	clean(t_setup *setup, t_philo *philos)
 {
 	int counter;
 	char name[50];
+	int status;
 
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
+		waitpid((pid_t)setup->philo_pid[counter], &status, 0);
 		sem_unlink(make_philo_name(counter++, name));
 		sem_close(philos[counter].has_eaten_enough_times);
 	}
@@ -182,9 +171,6 @@ int		main(int ac, char **av)
 	t_philo		*philos;
 
 	counter = 0;
-	sem_unlink("Forks");
-	sem_unlink("is_dead");
-	sem_unlink("writing");
 	if (init_setup(&setup, ac, av))
 		return (0);
 	if (!(philos = malloc(sizeof(t_philo) * setup.philo_num)))
@@ -192,7 +178,7 @@ int		main(int ac, char **av)
 	if (init_philos(philos, &setup))
 		return (0);
 	gettimeofday(&setup.start, NULL);
-	if (launch_philos(setup, philos))
+	if (launch_philos(&setup, philos))
 		return (1);
 	if (setup.eat_cycles)
 		if (wait_all_philo_eat_cycles(philos))
