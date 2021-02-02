@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 18:52:48 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 19:39:07 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	init_philos(t_philo *philos, t_setup *setup)
 	while (counter < setup->philo_num)
 	{
 		philos[counter].number = counter + 1;
+		philos[counter].th = 0;
 		philos[counter].dinners = 0;
 		philos[counter].last_dinner_ts = 0;
 		philos[counter].setup = setup;
@@ -61,24 +62,26 @@ void	launch_philos(t_setup setup, t_philo *philos)
 {
 	int counter;
 	int mult;
-	pthread_t th;
 	
 	mult = setup.philo_num / 2;
 	counter = 0;
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
-		pthread_create(&th, NULL, &handle_philosopher, &(philos[counter * 2]));
-		pthread_detach(th);
+		pthread_create(&(philos[counter * 2].th), NULL, &handle_philosopher, &(philos[counter * 2]));
+		pthread_detach(philos[counter * 2].th);
 		counter++;
 	}
 	counter = 0;
 	usleep(5);
 	while (counter < mult)
 	{
-		pthread_create(&th, NULL, &handle_philosopher, &(philos[counter * 2 + 1]));	
-		pthread_detach(th);
+		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher, &(philos[counter * 2 + 1]));	
+		pthread_detach(philos[counter * 2 + 1].th);
 		counter++;
 	}
+	counter = 0;
+	// while (counter < setup.philo_num)
+	// 	pthread_join(philos[counter++].th, NULL);
 }
 
 void	wait_all_philo_eat_cycles(t_philo *philos)
