@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 10:37:07 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 19:02:46 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 19:06:58 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,28 +39,28 @@ int		ft_strlen(const char *str)
 	return (res);
 }
 
-void	ft_putnbr(int n)
-{
-	char	c;
-	int		a;
+// void	ft_putnbr(int n)
+// {
+// 	char	c;
+// 	int		a;
 
-	a = 0;
-	(void)a;
-	if (n == -2147483648)
-		a = write(1, "-2147483648", 11);
-	else
-	{
-		if (n < 0)
-		{
-			a = write(1, "-", 1);
-			n = -n;
-		}
-		if (n / 10 > 0)
-			ft_putnbr(n / 10);
-		c = n % 10 + '0';
-		a = write(1, &c, 1);
-	}
-}
+// 	a = 0;
+// 	(void)a;
+// 	if (n == -2147483648)
+// 		a = write(1, "-2147483648", 11);
+// 	else
+// 	{
+// 		if (n < 0)
+// 		{
+// 			a = write(1, "-", 1);
+// 			n = -n;
+// 		}
+// 		if (n / 10 > 0)
+// 			ft_putnbr(n / 10);
+// 		c = n % 10 + '0';
+// 		a = write(1, &c, 1);
+// 	}
+// }
 
 int	ft_atoi(const char *input)
 {
