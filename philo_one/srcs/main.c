@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 14:44:26 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 18:52:48 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	wait_all_philo_eat_cycles(t_philo *philos)
 	pthread_mutex_unlock(&philos->setup->writing);
 	pthread_mutex_lock(&(philos->setup->writing));
 	if (!philos->setup->somebody_died)
-		write(1, "Everyone has eaten enough times.\n", 33);
+		counter = write(1, "Everyone has eaten enough times.\n", 33);
 	pthread_mutex_unlock(&(philos->setup->writing));
 	pthread_mutex_unlock(&(philos->setup->is_dead));
 }
