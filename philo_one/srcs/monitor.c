@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 18:55:36 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 19:00:11 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,26 @@ void	set_msg(t_philo *phil, int msg)
 
 void	write_msg(int time, int id, const char *action, pthread_mutex_t *writing)
 {
+	int a;
+
+	a = 0;
 	pthread_mutex_lock(writing);
 	ft_putnbr(time);
-	(void)write(1, "\t", 1);
+	a = write(1, "\t", 1);
 	ft_putnbr(id);
-	(void)write(1, action, ft_strlen(action));
+	a = write(1, action, ft_strlen(action));
 	pthread_mutex_unlock(writing);
 }
 
 void	write_msg_unsafe(int time, int id, const char *action)
 {
+	int a;
+
+	a = 0;
 	ft_putnbr(time);
-	(void)write(1, "\t", 1);
+	a = write(1, "\t", 1);
 	ft_putnbr(id);
-	(void)write(1, action, ft_strlen(action));
+	a = write(1, action, ft_strlen(action));
 }
 
 void	check_msgs(t_philo *phil, int time)

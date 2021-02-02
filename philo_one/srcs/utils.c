@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 10:37:07 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 18:55:50 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 19:00:40 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,23 @@ int		ft_strlen(const char *str)
 
 void	ft_putnbr(int n)
 {
-	char c;
+	char	c;
+	int		a;
 
+	a = 0;
 	if (n == -2147483648)
-		(void)write(1, "-2147483648", 11);
+		a = write(1, "-2147483648", 11);
 	else
 	{
 		if (n < 0)
 		{
-			(void)write(1, "-", 1);
+			a = write(1, "-", 1);
 			n = -n;
 		}
 		if (n / 10 > 0)
 			ft_putnbr(n / 10);
 		c = n % 10 + '0';
-		(void)write(1, &c, 1);
+		a = write(1, &c, 1);
 	}
 }
 
