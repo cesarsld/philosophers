@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 14:40:28 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:43:37 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct		s_philosophers
 	int				number;
 	sem_t			*has_eaten_enough_times;
 	int				alerts[6];
-	uint8_t			hands;
+	u_int8_t		hands;
 	t_setup			*setup;
 	u_int64_t		last_dinner_ts;
 	int				dinners;

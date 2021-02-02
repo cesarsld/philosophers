@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 10:40:55 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:44:26 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,6 @@ int		main(int ac, char **av)
 	pthread_mutex_lock(&(setup.is_dead));
 	pthread_mutex_unlock(&(setup.is_dead));
 	clean(&setup, philos);
-	write(1, "Simulation has ended.\n", 22);
+	ac = write(1, "Simulation has ended.\n", 22);
 	return (0);
 }

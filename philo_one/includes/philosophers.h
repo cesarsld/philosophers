@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 14:40:02 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:44:49 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct		s_philosophers
 	pthread_mutex_t	*right;
 	pthread_mutex_t has_eaten_enough_times;
 	int				alerts[6];
-	uint8_t			hands : 2;
+	u_int8_t		hands : 2;
 	t_setup			*setup;
 	u_int64_t		last_dinner_ts;
 	int				dinners;
