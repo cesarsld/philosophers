@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 19:39:07 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/02 23:19:45 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	launch_philos(t_setup setup, t_philo *philos)
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
 		pthread_create(&(philos[counter * 2].th), NULL, &handle_philosopher, &(philos[counter * 2]));
-		pthread_detach(philos[counter * 2].th);
+		//pthread_detach(philos[counter * 2].th);
 		counter++;
 	}
 	counter = 0;
@@ -76,12 +76,12 @@ void	launch_philos(t_setup setup, t_philo *philos)
 	while (counter < mult)
 	{
 		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher, &(philos[counter * 2 + 1]));	
-		pthread_detach(philos[counter * 2 + 1].th);
+		//pthread_detach(philos[counter * 2 + 1].th);
 		counter++;
 	}
 	counter = 0;
-	// while (counter < setup.philo_num)
-	// 	pthread_join(philos[counter++].th, NULL);
+	while (counter < setup.philo_num)
+		pthread_join(philos[counter++].th, NULL);
 }
 
 void	wait_all_philo_eat_cycles(t_philo *philos)
