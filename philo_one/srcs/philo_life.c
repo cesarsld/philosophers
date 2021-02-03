@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/03 12:35:23 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/03 13:15:02 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	*handle_philosopher(void *hi)
 
 	phil = hi;
 	pthread_create(&monitor, NULL, &monitor_philos, hi);
-	//pthread_detach(monitor);
+	pthread_detach(monitor);
 	while (1 && !phil->setup->can_stop)
 	{
 		phil->alerts[e_thinking] = 1;
@@ -75,7 +75,7 @@ void	*handle_philosopher(void *hi)
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 		sleep_us(phil->setup->time_to_sleep);
 	}
-	pthread_join(monitor, NULL);
+	//pthread_join(monitor, NULL);
 	unlock_forks(phil);
 	pthread_mutex_unlock(&(phil->has_eaten_enough_times));
 	return (NULL);
