@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/03 13:16:40 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/03 14:07:16 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,15 @@ void	launch_philos(t_setup setup, t_philo *philos)
 		counter++;
 	}
 	counter = 0;
-	usleep(10);
+	usleep(50);
 	while (counter < mult)
 	{
 		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher, &(philos[counter * 2 + 1]));	
-		pthread_detach(philos[counter * 2 + 1].th);
 		counter++;
 	}
 	counter = 0;
-	// while (counter < setup.philo_num)
-	// 	pthread_join(philos[counter++].th, NULL);
+	while (counter < setup.philo_num)
+		pthread_join(philos[counter++].th, NULL);
 }
 
 void	wait_all_philo_eat_cycles(t_philo *philos)
@@ -99,7 +98,7 @@ void	wait_all_philo_eat_cycles(t_philo *philos)
 	pthread_mutex_lock(&(philos->setup->writing));
 	if (!philos->setup->somebody_died)
 		counter = write(1, "Everyone has eaten enough times.\n", 33);
-	pthread_mutex_unlock(&(philos->setup->writing));
+	philos->setup->can_stop = 1;
 	pthread_mutex_unlock(&(philos->setup->is_dead));
 }
 
@@ -108,17 +107,17 @@ void	clean(t_setup *setup, t_philo *philos)
 	int counter;
 
 	counter = 0;
-	free(philos);
 	while (counter < setup->philo_num)
 	{
+		pthread_join(philos[counter].mo, NULL);
 		pthread_mutex_destroy(&(setup->forks[counter++]));
-		//pthread_mutex_destroy(&(philos[counter].has_eaten_enough_times));
-		//pthread_mutex_destroy(&(philos[counter++].has_eaten_enough_times));
-		//pthread_mutex_destroy(&(philos[counter].th));
-		//pthread_mutex_destroy(&(philos[counter++].monitor));
+		pthread_mutex_destroy(&(philos[counter].has_eaten_enough_times));
+		pthread_mutex_destroy(&(philos[counter++].has_eaten_enough_times));
 	}
-	//pthread_mutex_destroy(&(setup->is_dead));
-	//pthread_mutex_destroy(&(setup->writing));
+	pthread_mutex_destroy(&(setup->is_dead));
+	pthread_mutex_unlock(&(philos->setup->writing));
+	pthread_mutex_destroy(&(setup->writing));
+	free(philos);
 	free(setup->forks);
 }
 
