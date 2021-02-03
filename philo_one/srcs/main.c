@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/03 14:07:16 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/03 14:49:44 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	clean(t_setup *setup, t_philo *philos)
 	while (counter < setup->philo_num)
 	{
 		pthread_join(philos[counter].mo, NULL);
-		pthread_mutex_destroy(&(setup->forks[counter++]));
+		pthread_mutex_destroy(&(setup->forks[counter]));
 		pthread_mutex_destroy(&(philos[counter].has_eaten_enough_times));
 		pthread_mutex_destroy(&(philos[counter++].has_eaten_enough_times));
 	}
