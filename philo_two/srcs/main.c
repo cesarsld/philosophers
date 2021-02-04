@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 12:49:30 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 13:43:21 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ void	clean(t_setup *setup, t_philo *philos)
 		sem_close(philos[counter++].has_eaten_enough_times);
 	}
 	free(philos);
+	
 	sem_unlink("Forks");
 	sem_unlink("is_dead");
 	sem_unlink("writing");
@@ -151,10 +152,8 @@ void	clean(t_setup *setup, t_philo *philos)
 int		main(int ac, char **av)
 {
 	t_setup		setup;
-	int			counter;
 	t_philo		*philos;
 
-	counter = 0;
 	sem_unlink("Forks");
 	sem_unlink("is_dead");
 	sem_unlink("writing");
@@ -174,6 +173,8 @@ int		main(int ac, char **av)
 		return (1);
 	if (sem_post(philos->setup->is_dead))
 		return (1);
+	if (sem_post(philos->setup->writing))
+	 	return (1);
 	clean(&setup, philos);
 	printf("Simulation has ended.\n");
 	return (0);
