@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 22:44:36 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 14:40:39 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,13 @@ void	set_msg(t_philo *phil, int msg)
 void	write_msg(int time, int id, const char *action, sem_t *writing)
 {
 	sem_wait(writing);
-	ft_putnbr(time);
-	write(1, "\t", 1);
-	ft_putnbr(id);
-	write(1, action, ft_strlen(action));
+	printf("%d\t%d%s", time, id, action);
 	sem_post(writing);
 }
 
 void	write_msg_unsafe(int time, int id, const char *action)
 {
-	ft_putnbr(time);
-	write(1, "\t", 1);
-	ft_putnbr(id);
-	write(1, action, ft_strlen(action));
+	printf("%d\t%d%s", time, id, action);
 }
 
 void	check_msgs(t_philo *phil, int time)
@@ -76,7 +70,7 @@ void	check_msgs(t_philo *phil, int time)
 void	*monitor_philos(void *phil)
 {
 	t_philo *philo;
-	uint64_t		time;
+	u_int64_t		time;
 	
 	philo = phil;
 	while (1 && !philo->setup->can_stop)

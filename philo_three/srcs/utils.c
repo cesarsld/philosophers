@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 10:37:07 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 22:05:13 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 14:39:12 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,26 +64,6 @@ int		ft_strlen(const char *str)
 		str += 8;
 	}
 	return (res);
-}
-
-void	ft_putnbr(int n)
-{
-	char c;
-
-	if (n == -2147483648)
-		write(1, "-2147483648", 11);
-	else
-	{
-		if (n < 0)
-		{
-			write(1, "-", 1);
-			n = -n;
-		}
-		if (n / 10 > 0)
-			ft_putnbr(n / 10);
-		c = n % 10 + '0';
-		write(1, &c, 1);
-	}
 }
 
 int	ft_atoi(const char *input)

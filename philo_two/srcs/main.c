@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 13:43:21 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 13:50:27 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ int	launch_philos(t_setup setup, t_philo *philos)
 	{
 		if (pthread_create(&(philos[counter].th), NULL, &handle_philosopher, &(philos[counter])))
 			return (1);
-		//pthread_detach(th);
 		counter++;
 		usleep(20);
 	}
@@ -120,8 +119,6 @@ int	wait_all_philo_eat_cycles(t_philo *philos)
 	if (!philos->setup->somebody_died)
 		printf("Everyone has eaten enough times.\n");
 	philos->setup->can_stop = 1;
-	// if (sem_post(philos->setup->writing))
-	// 	return (1);
 	if (sem_post(philos->setup->is_dead))
 		return (1);
 	return (0);
