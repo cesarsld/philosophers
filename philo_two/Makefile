@@ -6,7 +6,7 @@
 #    By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 18:36:00 by cjaimes           #+#    #+#              #
-#    Updated: 2021/02/04 13:44:39 by cjaimes          ###   ########.fr        #
+#    Updated: 2021/02/04 13:48:13 by cjaimes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ NAME		=	philo_two
 
 RM			=	rm -f
 
-CC			=	gcc
+CC			=	clang
 
 CFLAGS		=	-Wall -Wextra -Werror -g -O3
 

@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 12:37:51 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 13:47:44 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <sys/wait.h>
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
