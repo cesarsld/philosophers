@@ -6,13 +6,13 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 12:36:49 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 14:39:24 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 14:47:53 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-uint64_t	elapsed_time(struct timeval start)
+u_int64_t	elapsed_time(struct timeval start)
 {
 	struct timeval now;
 
