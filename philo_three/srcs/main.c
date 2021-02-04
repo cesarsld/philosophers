@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 14:45:03 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 14:53:27 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ void	clean(t_setup *setup, t_philo *philos)
 		sem_unlink(make_philo_name(counter++, name));
 		sem_close(philos[counter].has_eaten_enough_times);
 	}
+	free(setup->philo_pid);
 	free(philos);
 	sem_unlink("Forks");
 	sem_unlink("is_dead");
