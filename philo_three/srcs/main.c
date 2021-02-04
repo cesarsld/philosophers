@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/22 10:14:08 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 14:45:03 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,8 @@ int launch_philo(t_setup *setup, t_philo *philo, int id)
 int	launch_philos(t_setup *setup, t_philo *philos)
 {
 	int counter;
-	pid_t pid;
 	
 	counter = 0;
-	pid = 0;
 	while (counter < setup->philo_num)
 	{
 		if (launch_philo(setup, &(philos[counter]), counter))
@@ -134,7 +132,7 @@ int	wait_all_philo_eat_cycles(t_philo *philos)
 	if (sem_wait(philos->setup->writing))
 		return (1);
 	if (!philos->setup->somebody_died)
-		write(1, "Everyone has eaten enough times.\n", 33);
+		printf("Everyone has eaten enough times.\n");
 	if (sem_post(philos->setup->writing))
 		return (1);
 	if (sem_post(philos->setup->is_dead))
@@ -167,10 +165,8 @@ void	clean(t_setup *setup, t_philo *philos)
 int		main(int ac, char **av)
 {
 	t_setup		setup;
-	int			counter;
 	t_philo		*philos;
 
-	counter = 0;
 	if (init_setup(&setup, ac, av))
 		return (0);
 	if (!(philos = malloc(sizeof(t_philo) * setup.philo_num)))
@@ -188,6 +184,6 @@ int		main(int ac, char **av)
 	if (sem_post(philos->setup->is_dead))
 		return (1);
 	clean(&setup, philos);
-	write(1, "Simulation has ended.\n", 22);
+	printf("Simulation has ended.\n");
 	return (0);
 }
