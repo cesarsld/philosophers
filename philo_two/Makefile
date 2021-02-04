@@ -6,7 +6,7 @@
 #    By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 18:36:00 by cjaimes           #+#    #+#              #
-#    Updated: 2021/02/04 12:35:50 by cjaimes          ###   ########.fr        #
+#    Updated: 2021/02/04 13:44:39 by cjaimes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ ${OBJ_DIR}%.o :	${SRC_DIR}%.c
 			@printf "%-60b\r" "${_CYAN}${ECHO}${_CYAN} Compiling $@"
 
 ${NAME}: ${OBJS}
-	${CC} ${CFLAGS} -o ${NAME} ${OBJS}
+	${CC} ${CFLAGS} -lpthread -o ${NAME} ${OBJS}
 
 run : all
 	./${NAME} 4 410 200 200 5
