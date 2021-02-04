@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/22 09:12:21 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 12:44:43 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,12 @@ int		check_cycle(t_philo *philo)
 void	*handle_philosopher(void *hi)
 {
 	t_philo *phil;
-	pthread_t monitor;
+	//pthread_t monitor;
 
 	phil = hi;
-	if (pthread_create(&monitor, NULL, &monitor_philos, hi))
+	if (pthread_create(&(phil->mo), NULL, &monitor_philos, hi))
 		return ((void *)1);
-	pthread_detach(monitor);
+	//pthread_detach(monitor);
 	while (1 && !phil->setup->can_stop)
 	{
 		phil->alerts[e_thinking] = 1;

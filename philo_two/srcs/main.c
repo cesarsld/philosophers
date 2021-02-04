@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2020/03/21 22:34:26 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 12:49:30 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,17 +83,20 @@ int		init_setup(t_setup *setup, int ac, char **av)
 int	launch_philos(t_setup setup, t_philo *philos)
 {
 	int counter;
-	pthread_t th;
+	//pthread_t th;
 	
 	counter = 0;
 	while (counter < setup.philo_num)
 	{
-		if (pthread_create(&th, NULL, &handle_philosopher, &(philos[counter])))
+		if (pthread_create(&(philos[counter].th), NULL, &handle_philosopher, &(philos[counter])))
 			return (1);
-		pthread_detach(th);
+		//pthread_detach(th);
 		counter++;
-		usleep(10);
+		usleep(20);
 	}
+	counter = 0;
+	while (counter < setup.philo_num)
+		pthread_join(philos[counter++].th, NULL);
 	return (0);
 }
 
@@ -115,9 +118,10 @@ int	wait_all_philo_eat_cycles(t_philo *philos)
 	if (sem_wait(philos->setup->writing))
 		return (1);
 	if (!philos->setup->somebody_died)
-		write(1, "Everyone has eaten enough times.\n", 33);
-	if (sem_post(philos->setup->writing))
-		return (1);
+		printf("Everyone has eaten enough times.\n");
+	philos->setup->can_stop = 1;
+	// if (sem_post(philos->setup->writing))
+	// 	return (1);
 	if (sem_post(philos->setup->is_dead))
 		return (1);
 	return (0);
@@ -131,8 +135,9 @@ void	clean(t_setup *setup, t_philo *philos)
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
-		sem_unlink(make_philo_name(counter++, name));
-		sem_close(philos[counter].has_eaten_enough_times);
+		pthread_join(philos[counter].mo, NULL);
+		sem_unlink(make_philo_name(counter, name));
+		sem_close(philos[counter++].has_eaten_enough_times);
 	}
 	free(philos);
 	sem_unlink("Forks");
@@ -170,6 +175,6 @@ int		main(int ac, char **av)
 	if (sem_post(philos->setup->is_dead))
 		return (1);
 	clean(&setup, philos);
-	write(1, "Simulation has ended.\n", 22);
+	printf("Simulation has ended.\n");
 	return (0);
 }
