@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 16:47:35 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/10 14:17:51 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ void	*monitor_philos(void *phil)
 			if (sem_wait(philo->setup->writing))
 				return ((void *)1);
 			write_msg_unsafe(time / 1000, philo->number, " died\n");
-			if (sem_post(philo->setup->writing))
-				return ((void *)1);
+			// if (sem_post(philo->setup->writing))
+			// 	return ((void *)1);
 			if (sem_post(philo->setup->is_dead))
 				return ((void *)1);
 			return (NULL);
