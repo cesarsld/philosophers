@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/02 19:06:22 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 16:49:27 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	check_msgs(t_philo *phil, int time)
 	}
 	if (phil->alerts[e_dead])
 	{
-		write_msg(time, phil->number, " is dead\n", &phil->setup->writing);
+		write_msg(time, phil->number, " died\n", &phil->setup->writing);
 		phil->alerts[e_dead] = 0;
 		phil->setup->can_stop = 1;
 	}
@@ -83,7 +83,7 @@ void	*monitor_philos(void *phil)
 			philo->setup->somebody_died = 1;
 			set_msg(philo, e_dead);
 			pthread_mutex_lock(&philo->setup->writing);
-			write_msg_unsafe(time / 1000, philo->number, " is dead\n");
+			write_msg_unsafe(time / 1000, philo->number, " died\n");
 			pthread_mutex_unlock(&philo->setup->writing);
 			pthread_mutex_unlock(&(philo->setup->is_dead));
 			return (NULL);

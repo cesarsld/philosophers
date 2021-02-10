@@ -6,7 +6,7 @@
 #    By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 18:36:00 by cjaimes           #+#    #+#              #
-#    Updated: 2021/02/02 19:17:13 by cjaimes          ###   ########.fr        #
+#    Updated: 2021/02/10 13:12:37 by cjaimes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,10 @@ ${NAME}: ${OBJS}
 
 run : all
 	./${NAME} 4 410 200 200 5
+
+val : all
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./${NAME} 4 410 200 200 5
+
 
 bonus: all
 

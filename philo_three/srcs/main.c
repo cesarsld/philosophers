@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 14:53:27 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 16:47:55 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ int	wait_all_philo_eat_cycles(t_philo *philos)
 		return (1);
 	if (!philos->setup->somebody_died)
 		printf("Everyone has eaten enough times.\n");
+	philos->setup->can_stop = 1;
 	if (sem_post(philos->setup->writing))
 		return (1);
 	if (sem_post(philos->setup->is_dead))
@@ -149,9 +150,10 @@ void	clean(t_setup *setup, t_philo *philos)
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
+		pthread_join(philos[counter].mo, NULL);
 		waitpid((pid_t)setup->philo_pid[counter], &status, 0);
-		sem_unlink(make_philo_name(counter++, name));
-		sem_close(philos[counter].has_eaten_enough_times);
+		sem_unlink(make_philo_name(counter, name));
+		sem_close(philos[counter++].has_eaten_enough_times);
 	}
 	free(setup->philo_pid);
 	free(philos);
@@ -180,6 +182,7 @@ int		main(int ac, char **av)
 	if (setup.eat_cycles)
 		if (wait_all_philo_eat_cycles(philos))
 			return (1);
+
 	if (sem_wait(philos->setup->is_dead))
 		return (1);
 	if (sem_post(philos->setup->is_dead))

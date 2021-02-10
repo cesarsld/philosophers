@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/03 13:53:13 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/04 18:33:55 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,11 @@ int		check_cycle(t_philo *philo)
 void	*handle_philosopher(void *hi)
 {
 	t_philo *phil;
-	//pthread_t monitor;
 
 	phil = hi;
 	pthread_create(&(phil->mo), NULL, &monitor_philos, hi);
-	//pthread_detach(monitor);
 	while (1 && !phil->setup->can_stop)
 	{
-		phil->alerts[e_thinking] = 1;
-		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 		lock_forks(phil);
 		eat(phil);
 		unlock_forks(phil);
@@ -74,6 +70,8 @@ void	*handle_philosopher(void *hi)
 		phil->alerts[e_sleeping] = 1;
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 		sleep_us(phil->setup->time_to_sleep);
+		phil->alerts[e_thinking] = 1;
+		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	}
 	//pthread_join(monitor, NULL);
 	unlock_forks(phil);
