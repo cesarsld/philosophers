@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/10 15:56:43 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/10 16:12:03 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,14 +102,24 @@ int launch_philo(t_setup *setup, t_philo *philo, int id)
 int	launch_philos(t_setup *setup, t_philo *philos)
 {
 	int counter;
+	int mult;
 	
+	mult = setup->philo_num / 2;
 	counter = 0;
-	while (counter < setup->philo_num)
+	while (counter < mult || (counter <= mult && setup->philo_num % 2 == 1))
 	{
-		if (launch_philo(setup, &(philos[counter]), counter))
+		if (launch_philo(setup, &(philos[counter * 2]), counter * 2))
 			return (1);
 		counter++;
-		usleep(10);
+		
+	}
+	usleep(50);
+	counter = 0;
+	while (counter < mult)
+	{
+		if (launch_philo(setup, &(philos[counter * 2 + 1]), counter * 2 + 1))
+			return (1);
+		counter++;
 	}
 	return (0);
 }
