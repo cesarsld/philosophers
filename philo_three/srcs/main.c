@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/10 16:12:03 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/10 16:28:30 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	launch_philos(t_setup *setup, t_philo *philos)
 		counter++;
 		
 	}
-	usleep(50);
+	usleep(1000);
 	counter = 0;
 	while (counter < mult)
 	{
