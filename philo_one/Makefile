@@ -6,7 +6,7 @@
 #    By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 18:36:00 by cjaimes           #+#    #+#              #
-#    Updated: 2021/02/10 13:43:56 by cjaimes          ###   ########.fr        #
+#    Updated: 2021/02/10 13:44:43 by cjaimes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,10 +53,10 @@ ${NAME}: ${OBJS}
 	${CC} ${CFLAGS} -lpthread -o ${NAME} ${OBJS}
 
 run : all
-	./${NAME} 4 610 200 200 5
+	./${NAME} 4 410 200 200 5
 
 val : all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./${NAME} 4 410 200 200 5
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./${NAME} 4 610 200 200 5
 
 
 bonus: all
