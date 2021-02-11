@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/10 14:17:51 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/11 23:07:54 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	*monitor_philos(void *phil)
 	philo = phil;
 	while (1 && !philo->setup->can_stop)
 	{
+		sem_wait(philo->eating);
 		time = elapsed_time(philo->setup->start);
 		if (time - philo->last_dinner_ts > philo->setup->time_to_die
 			&& !philo->setup->can_stop)
@@ -89,8 +90,10 @@ void	*monitor_philos(void *phil)
 			// 	return ((void *)1);
 			if (sem_post(philo->setup->is_dead))
 				return ((void *)1);
-			return (NULL);
+			sem_post(philo->eating);
+			exit(2);
 		}
+		sem_post(philo->eating);
 		usleep(1000);
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/10 15:10:34 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/11 17:54:35 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct		s_philosophers
 	u_int64_t		last_dinner_ts;
 	int				dinners;
 	int				is_eating;
+	sem_t			*eating;
 }					t_philo;
 
 

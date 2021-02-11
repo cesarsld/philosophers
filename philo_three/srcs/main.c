@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/10 16:47:09 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/11 23:10:00 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,22 @@ char	*make_philo_name(int id, char *dest)
 	i = 11;
 	*dest = 0;
 	ft_strcpy(dest, "philosopher");
+	while (id)
+	{
+		dest[i++] = (id % 10) + '0';
+		id /= 10;
+	}
+	dest[i] = 0;
+	return (dest);
+}
+
+char	*make_eating_name(int id, char *dest)
+{
+	int i;
+
+	i = 6;
+	*dest = 0;
+	ft_strcpy(dest, "eating");
 	while (id)
 	{
 		dest[i++] = (id % 10) + '0';
@@ -43,6 +59,10 @@ int	init_philos(t_philo *philos, t_setup *setup)
 		philos[counter].setup = setup;
 		philos[counter].is_eating = 0;
 		philos[counter].hands = 0;
+		sem_unlink(make_eating_name(counter, name));
+		if ((philos[counter].eating =
+			sem_open(make_eating_name(counter, name), O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
+			return (1);
 		if (setup->eat_cycles)
 		{
 			sem_unlink(make_philo_name(counter, name));
@@ -114,32 +134,32 @@ int	launch_philos(t_setup *setup, t_philo *philos)
 	return (0);
 }
 
-int	wait_all_philo_eat_cycles(t_philo *philos)
-{
-	int counter;
+// int	wait_all_philo_eat_cycles(t_philo *philos)
+// {
+// 	int counter;
 
-	counter = 0;
-	while (counter < philos->setup->philo_num)
-	{
-		if (sem_wait(philos[counter].has_eaten_enough_times))
-			return (1);
-		if (sem_post(philos[counter].has_eaten_enough_times))
-			return (1);
-		counter++;
-	}
-	if (sem_post(philos->setup->writing))
-		return (1);
-	if (sem_wait(philos->setup->writing))
-		return (1);
-	if (!philos->setup->somebody_died)
-		printf("Everyone has eaten enough times.\n");
-	philos->setup->can_stop = 1;
-	if (sem_post(philos->setup->writing))
-		return (1);
-	if (sem_post(philos->setup->is_dead))
-		return (1);
-	return (0);
-}
+// 	counter = 0;
+// 	while (counter < philos->setup->philo_num)
+// 	{
+// 		if (sem_wait(philos[counter].has_eaten_enough_times))
+// 			return (1);
+// 		if (sem_post(philos[counter].has_eaten_enough_times))
+// 			return (1);
+// 		counter++;
+// 	}
+// 	if (sem_post(philos->setup->writing))
+// 		return (1);
+// 	if (sem_wait(philos->setup->writing))
+// 		return (1);
+// 	if (!philos->setup->somebody_died)
+// 		printf("Everyone has eaten enough times.\n");
+// 	philos->setup->can_stop = 1;
+// 	if (sem_post(philos->setup->writing))
+// 		return (1);
+// 	if (sem_post(philos->setup->is_dead))
+// 		return (1);
+// 	return (0);
+// }
 
 int	wait_all_philo_eat_cycles_2(t_philo *philos)
 {
@@ -163,7 +183,10 @@ int	wait_all_philo_eat_cycles_2(t_philo *philos)
 				break;
 			}
 			else
+			{
+				printf("good exit, waiting others.\n");
 				counter++;
+			}
 		}
 		if (sem_wait(philos[counter].has_eaten_enough_times))
 			return (1);
@@ -171,14 +194,6 @@ int	wait_all_philo_eat_cycles_2(t_philo *philos)
 			return (1);
 		counter++;
 	}
-	// if (sem_post(philos->setup->writing))
-	// 	return (1);
-	// if (sem_wait(philos->setup->writing))
-	// 	return (1);
-	// if (sem_post(philos->setup->writing))
-	// 	return (1);
-	// if (sem_post(philos->setup->is_dead))
-	// 	return (1);
 	return (0);
 }
 
@@ -220,9 +235,8 @@ int		main(int ac, char **av)
 	gettimeofday(&setup.start, NULL);
 	if (launch_philos(&setup, philos))
 		return (1);
-	//if (setup.eat_cycles)
-		if (wait_all_philo_eat_cycles_2(philos))
-			return (1);
+	if (wait_all_philo_eat_cycles_2(philos))
+		return (1);
 
 	// if (sem_wait(philos->setup->is_dead))
 	// 	return (1);

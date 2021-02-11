@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/03 14:49:44 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/10 16:26:34 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	launch_philos(t_setup setup, t_philo *philos)
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
 		pthread_create(&(philos[counter * 2].th), NULL, &handle_philosopher, &(philos[counter * 2]));
-		//pthread_detach(philos[counter * 2].th);
 		counter++;
 	}
 	counter = 0;
@@ -121,6 +120,8 @@ void	clean(t_setup *setup, t_philo *philos)
 	free(setup->forks);
 }
 
+
+// protect when you write and read time of eat
 int		main(int ac, char **av)
 {
 	t_setup		setup;
