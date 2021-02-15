@@ -6,13 +6,13 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 12:55:29 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:56:10 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
-#include <pthread.h>
+# include <pthread.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -68,7 +68,6 @@ typedef struct		s_philosophers
 	int				is_eating;
 }					t_philo;
 
-
 void				ft_putnbr(int n);
 int					ft_atoi(const char *input);
 int					ft_strlen(const char *str);
@@ -82,8 +81,8 @@ int					unlock_forks(t_philo *philo);
 
 void				*handle_philosopher(void *hi);
 
-void 				wait_us(struct timeval t, u_int64_t start, u_int64_t dur);
-void 				sleep_us(u_int64_t dur);
+void				wait_us(struct timeval t, u_int64_t start, u_int64_t dur);
+void				sleep_us(u_int64_t dur);
 u_int64_t			elapsed_time(struct timeval start);
 
 void				msg_think(int time, t_philo *phil);
@@ -91,6 +90,7 @@ void				msg_eat(int time, t_philo *phil);
 void				msg_slp(int time, t_philo *phil);
 void				msg_left_fork(int time, t_philo *phil);
 void				msg_right_fork(int time, t_philo *phil);
-void				write_msg(int time, int id, const char *action, sem_t *writing);
+void				write_msg(int time, int id, const char *action,
+						sem_t *writing);
 
 #endif

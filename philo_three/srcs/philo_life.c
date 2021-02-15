@@ -6,13 +6,13 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:12:51 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:26:28 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	unlock_forks(t_philo *philo)
+int		unlock_forks(t_philo *philo)
 {
 	if (philo->hands)
 	{
@@ -29,7 +29,7 @@ int	unlock_forks(t_philo *philo)
 	return (0);
 }
 
-int	lock_forks(t_philo *phil)
+int		lock_forks(t_philo *phil)
 {
 	if (sem_wait(phil->setup->forks))
 		return (phil->setup->can_stop = 1);
@@ -78,11 +78,9 @@ void	handle_philosopher(void *hi)
 		exit(1);
 	while (1 && !phil->setup->can_stop)
 	{
-		if (lock_forks(phil))
-			exit(1);
+		lock_forks(phil) ? exit(1) : 0;
 		eat(phil);
-		if (unlock_forks(phil))
-			exit(1);
+		unlock_forks(phil) ? exit(1) : 0;
 		check_cycle(phil);
 		phil->alerts[e_sleeping] = 1;
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);

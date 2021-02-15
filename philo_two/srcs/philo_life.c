@@ -6,13 +6,13 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:13:12 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:56:30 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	unlock_forks(t_philo *philo)
+int		unlock_forks(t_philo *philo)
 {
 	if (philo->hands)
 	{
@@ -29,7 +29,7 @@ int	unlock_forks(t_philo *philo)
 	return (0);
 }
 
-int	lock_forks(t_philo *phil)
+int		lock_forks(t_philo *phil)
 {
 	if (sem_wait(phil->setup->forks))
 		return (phil->setup->can_stop = 1);

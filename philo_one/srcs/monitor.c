@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:00:55 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:52:33 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ void	check_msgs(t_philo *phil, int time)
 
 void	*monitor_philos(void *phil)
 {
-	t_philo *philo;
-	u_int64_t		time;
-	
+	t_philo		*philo;
+	u_int64_t	time;
+
 	philo = phil;
 	while (1 && !philo->setup->can_stop)
 	{

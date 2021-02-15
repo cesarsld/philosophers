@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:12:36 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:49:40 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ char	*make_eating_name(int id, char *dest)
 
 int	init_philos(t_philo *philos, t_setup *setup)
 {
-	int counter;
-	int s;
-	char name[50];
+	int		counter;
+	int		s;
+	char	name[50];
 
 	counter = 0;
 	while (counter < setup->philo_num)
@@ -90,7 +90,7 @@ int		init_setup(t_setup *setup, int ac, char **av)
 	setup->time_to_die = ft_atoi(av[2]) * 1000;
 	setup->time_to_eat = ft_atoi(av[3]) * 1000;
 	setup->time_to_sleep = ft_atoi(av[4]) * 1000;
-	setup->eat_cycles = ac == 6 ?  ft_atoi(av[5]) : 0;
+	setup->eat_cycles = ac == 6 ? ft_atoi(av[5]) : 0;
 	if (!(setup->philo_pid = malloc(sizeof(int) * setup->philo_num)))
 		return (1);
 	sem_unlink("Forks");
@@ -106,7 +106,6 @@ int		init_setup(t_setup *setup, int ac, char **av)
 		return (1);
 	return (0);
 }
-
 
 int launch_philo(t_setup *setup, t_philo *philo, int id)
 {
@@ -124,7 +123,7 @@ int launch_philo(t_setup *setup, t_philo *philo, int id)
 int	launch_philos(t_setup *setup, t_philo *philos)
 {
 	int counter;
-	
+
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
@@ -153,7 +152,7 @@ int		wait_all_philo_eat_cycles(t_philo *philos)
 			{
 				while (counter < philos->setup->philo_num)
 					kill(philos->setup->philo_pid[counter++], SIGTERM);
-				break;
+				break ;
 			}
 			else
 				counter++;
@@ -167,8 +166,8 @@ int		wait_all_philo_eat_cycles(t_philo *philos)
 
 void	clean(t_setup *setup, t_philo *philos)
 {
-	int counter;
-	char name[50];
+	int		counter;
+	char	name[50];
 
 	counter = 0;
 	while (counter < setup->philo_num)

@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:12:26 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:54:15 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	launch_philos(t_setup setup, t_philo *philos)
 	usleep(50);
 	while (counter < mult)
 	{
-		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher, &(philos[counter * 2 + 1]));	
+		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher, &(philos[counter * 2 + 1]));
 		counter++;
 	}
 	counter = 0;
@@ -121,8 +121,6 @@ void	clean(t_setup *setup, t_philo *philos)
 	free(setup->forks);
 }
 
-
-// protect when you write and read time of eat
 int		main(int ac, char **av)
 {
 	t_setup		setup;
@@ -132,7 +130,7 @@ int		main(int ac, char **av)
 	counter = 0;
 	init_setup(&setup, ac, av);
 	philos = malloc(sizeof(t_philo) * setup.philo_num);
-	setup.forks = malloc(sizeof(pthread_mutex_t)* (setup.philo_num));
+	setup.forks = malloc(sizeof(pthread_mutex_t) * (setup.philo_num));
 	while (counter < setup.philo_num)
 		pthread_mutex_init(&(setup.forks[counter++]), NULL);
 	init_philos(philos, &setup);

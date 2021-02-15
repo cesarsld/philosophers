@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 10:37:07 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 13:43:55 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:57:12 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int		ft_strlen(const char *str)
 	return (res);
 }
 
-int	ft_atoi(const char *input)
+int		ft_atoi(const char *input)
 {
 	int res;
 
