@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 12:36:49 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:54:43 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:02:47 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 u_int64_t	elapsed_time(struct timeval start)
 {
-	struct timeval now;
+	struct timeval	now;
+	u_uint64_t		r;
 
 	gettimeofday(&now, 0);
-	return (now.tv_sec - start.tv_sec) * 1000000 +
-		(now.tv_usec - start.tv_usec);
+	r = (now.tv_sec - start.tv_sec) * 1000000 + (now.tv_usec - start.tv_usec);
+	return (r);
 }
 
 void		wait_us(struct timeval t, u_int64_t start, u_int64_t dur)
