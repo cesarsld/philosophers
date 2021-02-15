@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 15:27:31 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 22:55:36 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	init_setup(t_setup *setup, int ac, char **av)
 	pthread_mutex_lock(&(setup->is_dead));
 }
 
-void	launch_philos(t_setup setup, t_philo *philos)
+int		launch_philos(t_setup setup, t_philo *philos)
 {
 	int counter;
 	int mult;
@@ -42,21 +42,24 @@ void	launch_philos(t_setup setup, t_philo *philos)
 	counter = 0;
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
-		pthread_create(&(philos[counter * 2].th), NULL, &handle_philosopher,
-		&(philos[counter * 2]));
+		if (pthread_create(&(philos[counter * 2].th), NULL,
+		&handle_philosopher, &(philos[counter * 2])))
+			return (1);
 		counter++;
 	}
 	counter = 0;
 	usleep(50);
 	while (counter < mult)
 	{
-		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher,
-		&(philos[counter * 2 + 1]));
+		if (pthread_create(&(philos[counter * 2 + 1].th), NULL,
+		&handle_philosopher, &(philos[counter * 2 + 1])))
+			return (1);
 		counter++;
 	}
 	counter = 0;
 	while (counter < setup.philo_num)
 		pthread_join(philos[counter++].th, NULL);
+	return (0);
 }
 
 void	wait_all_philo_eat_cycles(t_philo *philos)
@@ -111,7 +114,8 @@ int		main(int ac, char **av)
 		pthread_mutex_init(&(setup.forks[counter++]), NULL);
 	init_philos(philos, &setup);
 	gettimeofday(&setup.start, NULL);
-	launch_philos(setup, philos);
+	if (launch_philos(setup, philos))
+		return (1);
 	if (setup.eat_cycles)
 		wait_all_philo_eat_cycles(philos);
 	pthread_mutex_lock(&(setup.is_dead));
