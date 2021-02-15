@@ -6,109 +6,21 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:12:57 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:43:32 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-char	*make_philo_name(int id, char *dest)
-{
-	int i;
-
-	i = 11;
-	*dest = 0;
-	ft_strcpy(dest, "philosopher");
-	while (id)
-	{
-		dest[i++] = (id % 10) + '0';
-		id /= 10;
-	}
-	dest[i] = 0;
-	return (dest);
-}
-
-char	*make_eating_name(int id, char *dest)
-{
-	int i;
-
-	i = 6;
-	*dest = 0;
-	ft_strcpy(dest, "eating");
-	while (id)
-	{
-		dest[i++] = (id % 10) + '0';
-		id /= 10;
-	}
-	dest[i] = 0;
-	return (dest);
-}
-
-int	init_philos(t_philo *philos, t_setup *setup)
+int		launch_philos(t_setup setup, t_philo *philos)
 {
 	int counter;
-	int s;
-	char name[50];
 
-	counter = 0;
-	while (counter < setup->philo_num)
-	{
-		philos[counter].number = counter + 1;
-		philos[counter].dinners = 0;
-		philos[counter].last_dinner_ts = 0;
-		philos[counter].setup = setup;
-		philos[counter].is_eating = 0;
-		philos[counter].hands = 0;
-		sem_unlink(make_eating_name(counter, name));
-		if ((philos[counter].eating =
-			sem_open(make_eating_name(counter, name), O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
-			return (1);
-		if (setup->eat_cycles)
-		{
-			sem_unlink(make_philo_name(counter, name));
-			if ((philos[counter].has_eaten_enough_times =
-				sem_open(make_philo_name(counter, name), O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
-				return (1);
-			if (sem_wait(philos[counter].has_eaten_enough_times))
-				return (1);
-		}
-		s = 0;
-		while (s < 6)
-			philos[counter].alerts[s++] = 0;
-		counter++;
-	}
-	return (0);
-}
-
-int		init_setup(t_setup *setup, int ac, char **av)
-{
-	setup->can_stop = 0;
-	setup->somebody_died = 0;
-	setup->philo_num = ft_atoi(av[1]);
-	setup->time_to_die = ft_atoi(av[2]) * 1000;
-	setup->time_to_eat = ft_atoi(av[3]) * 1000;
-	setup->time_to_sleep = ft_atoi(av[4]) * 1000;
-	setup->eat_cycles = ac == 6 ?  ft_atoi(av[5]) : 0;
-	if ((setup->forks = sem_open("Forks", O_CREAT | O_EXCL, 0644, setup->philo_num)) == SEM_FAILED)
-		return (1);
-	if ((setup->is_dead  = sem_open("is_dead", O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
-		return (1);
-	if ((setup->writing  = sem_open("writing", O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
-		return (1);
-	if (sem_wait(setup->is_dead))
-		return (1);
-	return (0);
-}
-
-int	launch_philos(t_setup setup, t_philo *philos)
-{
-	int counter;
-	//pthread_t th;
-	
 	counter = 0;
 	while (counter < setup.philo_num)
 	{
-		if (pthread_create(&(philos[counter].th), NULL, &handle_philosopher, &(philos[counter])))
+		if (pthread_create(&(philos[counter].th), NULL,
+			&handle_philosopher, &(philos[counter])))
 			return (1);
 		counter++;
 		usleep(20);
@@ -119,7 +31,7 @@ int	launch_philos(t_setup setup, t_philo *philos)
 	return (0);
 }
 
-int	wait_all_philo_eat_cycles(t_philo *philos)
+int		wait_all_philo_eat_cycles(t_philo *philos)
 {
 	int counter;
 
@@ -144,11 +56,17 @@ int	wait_all_philo_eat_cycles(t_philo *philos)
 	return (0);
 }
 
-void	clean(t_setup *setup, t_philo *philos)
+int		clean(t_setup *setup, t_philo *philos)
 {
 	int counter;
 	char name[50];
 
+	if (sem_wait(philos->setup->is_dead))
+		return (1);
+	if (sem_post(philos->setup->is_dead))
+		return (1);
+	if (sem_post(philos->setup->writing))
+	 	return (1);
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
@@ -164,6 +82,7 @@ void	clean(t_setup *setup, t_philo *philos)
 	sem_close(setup->forks);
 	sem_close(setup->is_dead);
 	sem_close(setup->writing);
+	return (0);
 }
 
 int		main(int ac, char **av)
@@ -186,13 +105,8 @@ int		main(int ac, char **av)
 	if (setup.eat_cycles)
 		if (wait_all_philo_eat_cycles(philos))
 			return (1);
-	if (sem_wait(philos->setup->is_dead))
+	if (clean(&setup, philos))
 		return (1);
-	if (sem_post(philos->setup->is_dead))
-		return (1);
-	if (sem_post(philos->setup->writing))
-	 	return (1);
-	clean(&setup, philos);
 	printf("Simulation has ended.\n");
 	return (0);
 }

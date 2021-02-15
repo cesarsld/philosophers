@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 12:36:49 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:04:20 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:20:18 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 u_int64_t	elapsed_time(struct timeval start)
 {
 	struct timeval	now;
-	u_uint64_t		r;
+	u_int64_t		r;
 
 	gettimeofday(&now, 0);
 	r = (now.tv_sec - start.tv_sec) * 1000000 + (now.tv_usec - start.tv_usec);

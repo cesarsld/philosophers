@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:51:16 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:19:12 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,6 @@ void				msg_left_fork(int time, t_philo *phil);
 void				msg_right_fork(int time, t_philo *phil);
 void				write_msg(int time, int id, const char *action,
 						pthread_mutex_t *writing);
+void				init_philos(t_philo *philos, t_setup *setup);
 
 #endif

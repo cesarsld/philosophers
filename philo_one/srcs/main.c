@@ -6,44 +6,11 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:54:15 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:18:54 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-void	init_philos(t_philo *philos, t_setup *setup)
-{
-	int counter;
-	int s;
-
-	counter = 0;
-	while (counter < setup->philo_num)
-	{
-		philos[counter].number = counter + 1;
-		philos[counter].th = 0;
-		philos[counter].dinners = 0;
-		philos[counter].last_dinner_ts = 0;
-		philos[counter].setup = setup;
-		philos[counter].is_eating = 0;
-		philos[counter].hands = 0;
-		pthread_mutex_init(&(philos[counter].eating), NULL);
-		if (setup->eat_cycles)
-		{
-			pthread_mutex_init(&(philos[counter].has_eaten_enough_times), NULL);
-			pthread_mutex_lock(&(philos[counter].has_eaten_enough_times));
-		}
-		s = 0;
-		while (s < 6)
-			philos[counter].alerts[s++] = 0;
-		philos[counter].left = &(setup->forks[counter]);
-		if (philos[counter].number == setup->philo_num)
-			philos[counter].right = &(setup->forks[0]);
-		else
-			philos[counter].right = &(setup->forks[counter + 1]);
-		counter++;
-	}
-}
 
 void	init_setup(t_setup *setup, int ac, char **av)
 {
@@ -53,7 +20,7 @@ void	init_setup(t_setup *setup, int ac, char **av)
 	setup->time_to_die = ft_atoi(av[2]) * 1000;
 	setup->time_to_eat = ft_atoi(av[3]) * 1000;
 	setup->time_to_sleep = ft_atoi(av[4]) * 1000;
-	setup->eat_cycles = ac == 6 ?  ft_atoi(av[5]) : 0;
+	setup->eat_cycles = ac == 6 ? ft_atoi(av[5]) : 0;
 	pthread_mutex_init(&(setup->is_dead), NULL);
 	pthread_mutex_init(&(setup->writing), NULL);
 	pthread_mutex_lock(&(setup->is_dead));
@@ -63,19 +30,21 @@ void	launch_philos(t_setup setup, t_philo *philos)
 {
 	int counter;
 	int mult;
-	
+
 	mult = setup.philo_num / 2;
 	counter = 0;
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
-		pthread_create(&(philos[counter * 2].th), NULL, &handle_philosopher, &(philos[counter * 2]));
+		pthread_create(&(philos[counter * 2].th), NULL, &handle_philosopher,
+		&(philos[counter * 2]));
 		counter++;
 	}
 	counter = 0;
 	usleep(50);
 	while (counter < mult)
 	{
-		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher, &(philos[counter * 2 + 1]));
+		pthread_create(&(philos[counter * 2 + 1].th), NULL, &handle_philosopher,
+		&(philos[counter * 2 + 1]));
 		counter++;
 	}
 	counter = 0;
