@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 13:47:44 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 12:55:29 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct		s_philosophers
 	int				number;
 	pthread_t		th;
 	pthread_t		mo;
+	sem_t			*eating;
 	sem_t			*has_eaten_enough_times;
 	int				alerts[6];
 	u_int8_t		hands;
@@ -84,5 +85,12 @@ void				*handle_philosopher(void *hi);
 void 				wait_us(struct timeval t, u_int64_t start, u_int64_t dur);
 void 				sleep_us(u_int64_t dur);
 u_int64_t			elapsed_time(struct timeval start);
+
+void				msg_think(int time, t_philo *phil);
+void				msg_eat(int time, t_philo *phil);
+void				msg_slp(int time, t_philo *phil);
+void				msg_left_fork(int time, t_philo *phil);
+void				msg_right_fork(int time, t_philo *phil);
+void				write_msg(int time, int id, const char *action, sem_t *writing);
 
 #endif

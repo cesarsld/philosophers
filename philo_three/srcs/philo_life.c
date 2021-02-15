@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/11 23:10:54 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:12:51 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,11 @@ int		check_cycle(t_philo *philo)
 	if (philo->setup->eat_cycles && philo->dinners >= philo->setup->eat_cycles)
 	{
 		if (sem_post(philo->has_eaten_enough_times))
-			return (philo->setup->can_stop = 1);
-		return (1);
+		{
+			philo->setup->can_stop = 1;
+			exit(1);
+		}
+		exit(0);
 	}
 	return (0);
 }
@@ -80,11 +83,7 @@ void	handle_philosopher(void *hi)
 		eat(phil);
 		if (unlock_forks(phil))
 			exit(1);
-		if (check_cycle(phil)){
-			if (sem_post(phil->has_eaten_enough_times))
-				exit(1);
-			exit(0);
-		}
+		check_cycle(phil);
 		phil->alerts[e_sleeping] = 1;
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 		sleep_us(phil->setup->time_to_sleep);

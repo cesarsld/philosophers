@@ -6,7 +6,7 @@
 #    By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/18 18:36:00 by cjaimes           #+#    #+#              #
-#    Updated: 2021/02/10 13:44:43 by cjaimes          ###   ########.fr        #
+#    Updated: 2021/02/12 16:19:01 by cjaimes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ SRC			=	main.c \
 				monitor.c \
 				utils.c \
 				time.c \
-				philo_life.c
+				philo_life.c \
+				messages.c
 				
 
 SRCS		=	${addprefix ${SRC_DIR}, ${SRC}}

@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 13:50:27 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:12:57 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,22 @@ char	*make_philo_name(int id, char *dest)
 	i = 11;
 	*dest = 0;
 	ft_strcpy(dest, "philosopher");
+	while (id)
+	{
+		dest[i++] = (id % 10) + '0';
+		id /= 10;
+	}
+	dest[i] = 0;
+	return (dest);
+}
+
+char	*make_eating_name(int id, char *dest)
+{
+	int i;
+
+	i = 6;
+	*dest = 0;
+	ft_strcpy(dest, "eating");
 	while (id)
 	{
 		dest[i++] = (id % 10) + '0';
@@ -43,6 +59,10 @@ int	init_philos(t_philo *philos, t_setup *setup)
 		philos[counter].setup = setup;
 		philos[counter].is_eating = 0;
 		philos[counter].hands = 0;
+		sem_unlink(make_eating_name(counter, name));
+		if ((philos[counter].eating =
+			sem_open(make_eating_name(counter, name), O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
+			return (1);
 		if (setup->eat_cycles)
 		{
 			sem_unlink(make_philo_name(counter, name));
@@ -132,12 +152,12 @@ void	clean(t_setup *setup, t_philo *philos)
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
+		sem_close(philos[counter].eating);
 		pthread_join(philos[counter].mo, NULL);
 		sem_unlink(make_philo_name(counter, name));
 		sem_close(philos[counter++].has_eaten_enough_times);
 	}
 	free(philos);
-	
 	sem_unlink("Forks");
 	sem_unlink("is_dead");
 	sem_unlink("writing");

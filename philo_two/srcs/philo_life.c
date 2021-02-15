@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 13:50:48 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:13:12 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ int	lock_forks(t_philo *phil)
 
 void	eat(t_philo *phil)
 {
-	phil->is_eating = 1;
+	sem_wait(phil->eating);
 	phil->last_dinner_ts = elapsed_time(phil->setup->start);
 	phil->alerts[e_eating] = 1;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	wait_us(phil->setup->start, phil->last_dinner_ts, phil->setup->time_to_eat);
 	phil->dinners++;
-	phil->is_eating = 0;
+	sem_post(phil->eating);
 }
 
 int		check_cycle(t_philo *philo)

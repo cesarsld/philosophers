@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 16:49:42 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:03:27 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,37 +34,21 @@ void	check_msgs(t_philo *phil, int time)
 	if (phil->setup->can_stop)
 		return ;
 	if (phil->alerts[e_thinking])
-	{
-		write_msg(time, phil->number, " is thinking\n", phil->setup->writing);
-		phil->alerts[e_thinking] = 0;
-	}
+		msg_think(time, phil);
 	if (phil->alerts[e_fork_left])
-	{
-		write_msg(time, phil->number, " has taken a fork\n", phil->setup->writing);
-		phil->alerts[e_fork_left] = 0;
-	}
+		msg_left_fork(time, phil);
 	if (phil->alerts[e_fork_right])
-	{
-		write_msg(time, phil->number, " has taken a fork\n", phil->setup->writing);
-		phil->alerts[e_fork_right] = 0;
-	}
+		msg_right_fork(time, phil);
 	if (phil->alerts[e_eating])
-	{
-		write_msg(time, phil->number, " is eating\n", phil->setup->writing);
-		phil->alerts[e_eating] = 0;
-	}
+		msg_eat(time, phil);
 	if (phil->alerts[e_sleeping])
-	{
-		write_msg(time, phil->number, " is sleeping\n", phil->setup->writing);
-		phil->alerts[e_sleeping] = 0;
-	}
+		msg_slp(time, phil);
 	if (phil->alerts[e_dead])
 	{
 		write_msg(time, phil->number, " died\n", phil->setup->writing);
 		phil->alerts[e_dead] = 0;
 		phil->setup->can_stop = 1;
 	}
-
 }
 
 void	*monitor_philos(void *phil)
@@ -75,6 +59,7 @@ void	*monitor_philos(void *phil)
 	philo = phil;
 	while (1 && !philo->setup->can_stop)
 	{
+		sem_wait(philo->eating);
 		time = elapsed_time(philo->setup->start);
 		if (time - philo->last_dinner_ts > philo->setup->time_to_die
 			&& !philo->setup->can_stop)
@@ -89,8 +74,10 @@ void	*monitor_philos(void *phil)
 				return ((void *)1);
 			if (sem_post(philo->setup->is_dead))
 				return ((void *)1);
+			sem_post(philo->eating);
 			return (NULL);
 		}
+		sem_post(philo->eating);
 		usleep(1000);
 	}
 	return (NULL);

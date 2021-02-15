@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/10 16:26:34 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:12:26 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	init_philos(t_philo *philos, t_setup *setup)
 		philos[counter].setup = setup;
 		philos[counter].is_eating = 0;
 		philos[counter].hands = 0;
+		pthread_mutex_init(&(philos[counter].eating), NULL);
 		if (setup->eat_cycles)
 		{
 			pthread_mutex_init(&(philos[counter].has_eaten_enough_times), NULL);
@@ -110,7 +111,7 @@ void	clean(t_setup *setup, t_philo *philos)
 	{
 		pthread_join(philos[counter].mo, NULL);
 		pthread_mutex_destroy(&(setup->forks[counter]));
-		pthread_mutex_destroy(&(philos[counter].has_eaten_enough_times));
+		pthread_mutex_destroy(&(philos[counter].eating));
 		pthread_mutex_destroy(&(philos[counter++].has_eaten_enough_times));
 	}
 	pthread_mutex_destroy(&(setup->is_dead));

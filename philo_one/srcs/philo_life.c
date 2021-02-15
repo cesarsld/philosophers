@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/04 18:33:55 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 13:12:16 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,14 @@ void	lock_forks(t_philo *phil)
 
 void	eat(t_philo *phil)
 {
-	phil->is_eating = 1;
+	pthread_mutex_lock(&phil->eating);
 	phil->last_dinner_ts = elapsed_time(phil->setup->start);
 	phil->alerts[e_eating] = 1;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
-	wait_us(phil->setup->start, phil->last_dinner_ts, phil->setup->time_to_eat);
+	wait_us(phil->setup->start, phil->last_dinner_ts,
+		phil->setup->time_to_eat);
 	phil->dinners++;
-	phil->is_eating = 0;
+	pthread_mutex_unlock(&phil->eating);
 }
 
 int		check_cycle(t_philo *philo)
@@ -73,7 +74,6 @@ void	*handle_philosopher(void *hi)
 		phil->alerts[e_thinking] = 1;
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	}
-	//pthread_join(monitor, NULL);
 	unlock_forks(phil);
 	pthread_mutex_unlock(&(phil->has_eaten_enough_times));
 	return (NULL);
