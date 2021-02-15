@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 15:41:53 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 15:54:08 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,6 @@ void	*handle_philosopher(void *hi)
 	if (unlock_forks(phil))
 		return ((void *)1);
 	if (phil->has_eaten_enough_times && sem_post(phil->has_eaten_enough_times))
-			return ((void *)1);
+		return ((void *)1);
 	return (NULL);
 }

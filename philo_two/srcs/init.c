@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:43:20 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 15:29:46 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 15:54:21 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int		init_philos(t_philo *philos, t_setup *setup)
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
-		philos[counter]= (t_philo){.number = counter + 1, .dinners = 0,
+		philos[counter] = (t_philo){.number = counter + 1, .dinners = 0,
 		.last_dinner_ts = 0, .setup = setup, .is_eating = 0, .hands = 0};
 		sem_unlink(make_eating_name(counter, name));
 		if (setup_philo_sems(&(philos[counter]), setup, counter))

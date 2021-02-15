@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:33:26 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 15:28:59 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 15:54:39 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int		setup_philo_sems(t_philo *philo, t_setup *setup, int counter)
 	if ((philo->eating =
 			sem_open(make_eating_name(counter, name),
 			O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
-			return (1);
+		return (1);
 	if (setup->eat_cycles)
 	{
 		sem_unlink(make_philo_name(counter, name));
