@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:12:16 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 15:45:51 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	*handle_philosopher(void *hi)
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	}
 	unlock_forks(phil);
-	pthread_mutex_unlock(&(phil->has_eaten_enough_times));
+	if (phil->setup->eat_cycles)
+		pthread_mutex_unlock(&(phil->has_eaten_enough_times));
 	return (NULL);
 }
