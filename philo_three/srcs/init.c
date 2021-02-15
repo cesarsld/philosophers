@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:33:26 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:33:46 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:48:21 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,20 @@ char	*make_eating_name(int id, char *dest)
 int		setup_philo_sems(t_philo *philo, t_setup *setup, int counter)
 {
 	char	name[50];
-	
+
 	if ((philo->eating =
 			sem_open(make_eating_name(counter, name),
 			O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
 			return (1);
 	if (setup->eat_cycles)
-		{
-			sem_unlink(make_philo_name(counter, name));
-			if ((philo->has_eaten_enough_times =
-				sem_open(make_philo_name(counter, name),
-				O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
-				return (1);
-			if (sem_wait(philo->has_eaten_enough_times))
-				return (1);
+	{
+		sem_unlink(make_philo_name(counter, name));
+		if ((philo->has_eaten_enough_times =
+			sem_open(make_philo_name(counter, name),
+			O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
+			return (1);
+		if (sem_wait(philo->has_eaten_enough_times))
+			return (1);
 	}
 	return (0);
 }

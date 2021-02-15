@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:43:32 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:50:50 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,15 @@ int		wait_all_philo_eat_cycles(t_philo *philos)
 
 int		clean(t_setup *setup, t_philo *philos)
 {
-	int counter;
-	char name[50];
+	int		counter;
+	char	name[50];
 
 	if (sem_wait(philos->setup->is_dead))
 		return (1);
 	if (sem_post(philos->setup->is_dead))
 		return (1);
 	if (sem_post(philos->setup->writing))
-	 	return (1);
+		return (1);
 	counter = 0;
 	while (counter < setup->philo_num)
 	{

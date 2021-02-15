@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:18:29 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:19:02 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 14:49:00 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ void	init_philos(t_philo *philos, t_setup *setup)
 	counter = 0;
 	while (counter < setup->philo_num)
 	{
-		philos[counter] = (t_philo){.number = counter + 1, .th = 0, .dinners = 0,
-		.last_dinner_ts = 0, .setup = setup, .is_eating = 0, .hands = 0};
+		philos[counter] = (t_philo){.number = counter + 1, .th = 0,
+		.dinners = 0, .last_dinner_ts = 0, .setup = setup, .is_eating = 0,
+		.hands = 0};
 		pthread_mutex_init(&(philos[counter].eating), NULL);
 		if (setup->eat_cycles)
 		{
