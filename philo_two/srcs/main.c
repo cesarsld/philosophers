@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:50:50 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 15:04:03 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int		main(int ac, char **av)
 	if (setup.eat_cycles)
 		if (wait_all_philo_eat_cycles(philos))
 			return (1);
+	printf("ok\n");
 	if (clean(&setup, philos))
 		return (1);
 	printf("Simulation has ended.\n");
