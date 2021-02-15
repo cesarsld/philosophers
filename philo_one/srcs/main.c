@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:18:54 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 15:27:31 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,16 @@
 
 void	init_setup(t_setup *setup, int ac, char **av)
 {
+	int err;
+
+	err = 0;
 	setup->can_stop = 0;
 	setup->somebody_died = 0;
-	setup->philo_num = ft_atoi(av[1]);
+	if ((setup->philo_num = ft_atoi(av[1])) <= 1)
+	{
+		printf("You must use at least 2 philosophers\n");
+		exit(1);
+	}
 	setup->time_to_die = ft_atoi(av[2]) * 1000;
 	setup->time_to_eat = ft_atoi(av[3]) * 1000;
 	setup->time_to_sleep = ft_atoi(av[4]) * 1000;

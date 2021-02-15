@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:33:26 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:48:21 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/15 15:28:59 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ int		init_setup(t_setup *setup, int ac, char **av)
 {
 	setup->can_stop = 0;
 	setup->somebody_died = 0;
-	setup->philo_num = ft_atoi(av[1]);
+	if ((setup->philo_num = ft_atoi(av[1])) <= 1)
+		return (1);
 	setup->time_to_die = ft_atoi(av[2]) * 1000;
 	setup->time_to_eat = ft_atoi(av[3]) * 1000;
 	setup->time_to_sleep = ft_atoi(av[4]) * 1000;
