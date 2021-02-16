@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:43:53 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/16 13:58:37 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,6 @@ char				*make_philo_name(int id, char *dest);
 char				*make_eating_name(int id, char *dest);
 int					init_philos(t_philo *philos, t_setup *setup);
 int					init_setup(t_setup *setup, int ac, char **av);
+int					print_error_usage(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 15:46:21 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/16 13:59:02 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ int		main(int ac, char **av)
 	sem_unlink("Forks");
 	sem_unlink("is_dead");
 	sem_unlink("writing");
+	if (ac <= 5)
+		return (print_error_usage());
 	if (init_setup(&setup, ac, av))
 		return (0);
 	if (!(philos = malloc(sizeof(t_philo) * setup.philo_num)))

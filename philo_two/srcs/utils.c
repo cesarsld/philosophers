@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 10:37:07 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:03:22 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/16 13:59:39 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,11 @@ int		ft_atoi(const char *input)
 	while (*input)
 		res = res * 10 + *input++ - '0';
 	return (res);
+}
+
+int		print_error_usage(void)
+{
+	printf("usage: ./philo_three  number_of_philos time_to_die time");
+	printf("_to_eat time_to_sleep [eat_cycles]\n");
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:33:54 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/16 13:50:56 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,12 @@ int		main(int ac, char **av)
 	t_setup		setup;
 	t_philo		*philos;
 
+	if (ac <= 5)
+	{
+		printf("usage: ./philo_two  number_of_philosopher time_to_die time");
+		printf("_to_eat time_to_sleep [eat_cycles]\n");
+		return (1);
+	}
 	if (init_setup(&setup, ac, av))
 		return (0);
 	if (!(philos = malloc(sizeof(t_philo) * setup.philo_num)))
