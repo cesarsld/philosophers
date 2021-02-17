@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/17 11:49:31 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:57:57 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 13:10:11 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,16 @@ void	*monitor_philos(void *phil)
 	u_int64_t	time;
 
 	philo = phil;
-	while (1 && !philo->setup->can_stop)
+	while (!philo->setup->can_stop)
 	{
 		sem_wait(philo->eating);
 		time = elapsed_time(philo->setup->start);
-		if (time - philo->last_dinner_ts > philo->setup->time_to_die
-			&& !philo->setup->can_stop)
+		if ((time - philo->last_dinner_ts > philo->setup->time_to_die
+			&& !philo->setup->can_stop) && (philo->setup->eat_cycles &&
+			philo->dinners < philo->setup->eat_cycles))
 		{
 			philo->setup->can_stop = 1;
 			philo->setup->somebody_died = 1;
-			set_msg(philo, e_dead);
 			sem_wait(philo->setup->writing);
 			write_msg_unsafe(time / 1000, philo->number, " died\n");
 			sem_post(philo->setup->writing);
