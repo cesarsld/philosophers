@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/17 14:32:24 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:35:24 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	clean(t_setup *setup, t_philo *philos)
 	while (counter < setup->philo_num)
 	{
 		sem_close(philos[counter].eating);
-		sem_close(philos[counter++].has_eaten_enough_times);
-		sem_unlink(make_philo_name(counter, name));
+		//sem_close(philos[counter++].has_eaten_enough_times);
+		sem_unlink(make_eating_name(counter++, name));
 	}
 	free(setup->philo_pid);
 	free(philos);

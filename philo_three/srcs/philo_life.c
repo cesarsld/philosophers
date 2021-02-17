@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/17 14:32:10 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:35:45 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,6 @@ int		check_cycle(t_philo *philo)
 {
 	if (philo->setup->eat_cycles && philo->dinners >= philo->setup->eat_cycles)
 	{
-		if (sem_post(philo->has_eaten_enough_times))
-		{
-			philo->setup->can_stop = 1;
-			exit(1);
-		}
 		exit(0);
 	}
 	return (0);
@@ -90,8 +85,6 @@ void	handle_philosopher(void *hi)
 	}
 	pthread_join(phil->mo, NULL);
 	if (unlock_forks(phil))
-		exit(1);
-	if (phil->setup->eat_cycles && (phil->has_eaten_enough_times))
 		exit(1);
 	if (phil->setup->somebody_died)
 		exit(2);

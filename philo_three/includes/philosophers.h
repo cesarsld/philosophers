@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:46:47 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 14:35:15 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:34:40 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ typedef struct		s_philosophers
 {
 	int				number;
 	pthread_t		mo;
-	sem_t			*has_eaten_enough_times;
 	int				alerts[6];
 	u_int8_t		hands;
 	t_setup			*setup;
