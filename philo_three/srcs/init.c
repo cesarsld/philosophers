@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:33:26 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/17 14:36:27 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:38:39 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*make_eating_name(int id, char *dest)
 	return (dest);
 }
 
-int		setup_philo_sems(t_philo *philo, t_setup *setup, int counter)
+int		setup_philo_sems(t_philo *philo, int counter)
 {
 	char	name[50];
 
@@ -52,16 +52,6 @@ int		setup_philo_sems(t_philo *philo, t_setup *setup, int counter)
 			sem_open(make_eating_name(counter, name),
 			O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
 		return (1);
-	if (setup->eat_cycles)
-	{
-		// sem_unlink(make_philo_name(counter, name));
-		// if ((philo->has_eaten_enough_times =
-		// 	sem_open(make_philo_name(counter, name),
-		// 	O_CREAT | O_EXCL, 0644, 1)) == SEM_FAILED)
-		// 	return (1);
-		// if (sem_wait(philo->has_eaten_enough_times))
-		// 	return (1);
-	}
 	return (0);
 }
 
@@ -77,7 +67,7 @@ int		init_philos(t_philo *philos, t_setup *setup)
 		philos[counter] = (t_philo){.number = counter + 1, .dinners = 0,
 		.last_dinner_ts = 0, .setup = setup, .is_eating = 0, .hands = 0};
 		sem_unlink(make_eating_name(counter, name));
-		if (setup_philo_sems(&(philos[counter]), setup, counter))
+		if (setup_philo_sems(&(philos[counter]), counter))
 			return (1);
 		s = 0;
 		while (s < 6)
