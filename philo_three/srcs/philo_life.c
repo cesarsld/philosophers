@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/15 13:26:28 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:04:56 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,10 @@ int		check_cycle(t_philo *philo)
 		if (sem_post(philo->has_eaten_enough_times))
 		{
 			philo->setup->can_stop = 1;
+			printf("%d check cycle exit\n", philo->number);
 			exit(1);
 		}
+		printf("%d check good exit\n", philo->number);
 		exit(0);
 	}
 	return (0);
@@ -89,11 +91,17 @@ void	handle_philosopher(void *hi)
 		check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	}
 	pthread_join(phil->mo, NULL);
-	if (unlock_forks(phil))
+	if (unlock_forks(phil)) {
+		printf("%d unlock exit\n", phil->number);
 		exit(1);
+	}
 	if (sem_post(phil->has_eaten_enough_times))
+	{
+		printf("%d sem post exit\n", phil->number);
 		exit(1);
+	}
 	if (phil->setup->somebody_died)
 		exit(2);
+	printf("%d good exit\n", phil->number);
 	exit(0);
 }
