@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/16 14:14:45 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 10:51:46 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,18 @@ int		launch_philos(t_setup setup, t_philo *philos)
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
 		if (pthread_create(&(philos[counter * 2].th), NULL,
-		&handle_philosopher, &(philos[counter * 2])))
+		&handle_philosopher, &(philos[counter++ * 2])))
 			return (1);
-		counter++;
+		usleep(50);
 	}
 	counter = 0;
-	usleep(50);
+	usleep(500);
 	while (counter < mult)
 	{
 		if (pthread_create(&(philos[counter * 2 + 1].th), NULL,
-		&handle_philosopher, &(philos[counter * 2 + 1])))
+		&handle_philosopher, &(philos[counter++ * 2 + 1])))
 			return (1);
-		counter++;
+		usleep(50);
 	}
 	counter = 0;
 	while (counter < setup.philo_num)
