@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/17 14:21:35 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:26:01 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	handle_philosopher(void *hi)
 		printf("%d unlock exit\n", phil->number);
 		exit(1);
 	}
-	if (sem_post(phil->has_eaten_enough_times))
+	if (phil->setup->eat_cycles && (phil->has_eaten_enough_times))
 	{
 		printf("%d sem post exit\n", phil->number);
 		exit(1);

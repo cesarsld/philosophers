@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/17 14:23:12 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:29:02 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ int		wait_all_philo_eat_cycles(t_philo *philos)
 	while (counter < philos->setup->philo_num)
 	{
 		waitpid(-1, &status, 0);
-		printf("boop\n");
 		if ((WIFEXITED(status) || WIFSIGNALED(status)))
 		{
 			exit_status = WEXITSTATUS(status);
@@ -67,9 +66,9 @@ int		wait_all_philo_eat_cycles(t_philo *philos)
 				counter++;
 			}
 		}
-		printf("%d cycles done\n", counter);
-		sem_wait(philos[counter].has_eaten_enough_times);
-		sem_post(philos[counter].has_eaten_enough_times);
+		// printf("%d cycles done\npointer is %p\n", counter, philos[counter].has_eaten_enough_times);
+		// sem_wait(philos[counter].has_eaten_enough_times);
+		// sem_post(philos[counter].has_eaten_enough_times);
 		counter++;
 	}
 	printf("done waiting\n");
