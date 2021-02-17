@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/20 14:16:00 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/17 14:04:56 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 14:21:35 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,19 @@ int		unlock_forks(t_philo *philo)
 	if (philo->hands)
 	{
 		if (sem_post(philo->setup->forks))
+		{
+			printf("%d lock fork exit\n", philo->number);
 			return (philo->setup->can_stop = 1);
+		}
 		philo->hands--;
 	}
 	if (philo->hands)
 	{
 		if (sem_post(philo->setup->forks))
+		{
+			printf("%d lock fork exit\n", philo->number);
 			return (philo->setup->can_stop = 1);
-		philo->hands--;
+		}		philo->hands--;
 	}
 	return (0);
 }
@@ -32,12 +37,18 @@ int		unlock_forks(t_philo *philo)
 int		lock_forks(t_philo *phil)
 {
 	if (sem_wait(phil->setup->forks))
+	{
+		printf("%d lock fork exit\n", phil->number);
 		return (phil->setup->can_stop = 1);
+	}
 	phil->alerts[e_fork_left] = 1;
 	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
 	if (sem_wait(phil->setup->forks))
+	{
+		printf("%d lock fork exit\n", phil->number);
 		return (phil->setup->can_stop = 1);
+	}
 	phil->alerts[e_fork_right] = 1;
 	phil->hands++;
 	check_msgs(phil, elapsed_time(phil->setup->start) / 1000);
@@ -101,7 +112,10 @@ void	handle_philosopher(void *hi)
 		exit(1);
 	}
 	if (phil->setup->somebody_died)
+	{
+		printf("%d death exit\n", phil->number);
 		exit(2);
+	}
 	printf("%d good exit\n", phil->number);
 	exit(0);
 }
