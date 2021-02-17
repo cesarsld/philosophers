@@ -6,7 +6,7 @@
 /*   By: cjaimes <cjaimes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 20:45:09 by cjaimes           #+#    #+#             */
-/*   Updated: 2021/02/17 10:51:46 by cjaimes          ###   ########.fr       */
+/*   Updated: 2021/02/17 11:11:08 by cjaimes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,25 @@ void	init_setup(t_setup *setup, int ac, char **av)
 	pthread_mutex_lock(&(setup->is_dead));
 }
 
-int		launch_philos(t_setup setup, t_philo *philos)
+int		launch_philos(t_setup setup, t_philo *philos, int counter)
 {
-	int counter;
 	int mult;
 
 	mult = setup.philo_num / 2;
-	counter = 0;
 	while (counter < mult || (counter <= mult && setup.philo_num % 2 == 1))
 	{
 		if (pthread_create(&(philos[counter * 2].th), NULL,
-		&handle_philosopher, &(philos[counter++ * 2])))
+		&handle_philosopher, &(philos[counter * 2])))
 			return (1);
+		counter++;
 		usleep(50);
 	}
-	counter = 0;
+	counter = -1;
 	usleep(500);
-	while (counter < mult)
+	while (++counter < mult)
 	{
 		if (pthread_create(&(philos[counter * 2 + 1].th), NULL,
-		&handle_philosopher, &(philos[counter++ * 2 + 1])))
+		&handle_philosopher, &(philos[counter * 2 + 1])))
 			return (1);
 		usleep(50);
 	}
@@ -120,7 +119,7 @@ int		main(int ac, char **av)
 		pthread_mutex_init(&(setup.forks[counter++]), NULL);
 	init_philos(philos, &setup);
 	gettimeofday(&setup.start, NULL);
-	if (launch_philos(setup, philos))
+	if (launch_philos(setup, philos, 0))
 		return (1);
 	if (setup.eat_cycles)
 		wait_all_philo_eat_cycles(philos);
